@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strategic Positioning - Business Data Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-slide-up {
+            animation: slideUp 0.6s ease-out forwards;
+        }
+
+        .animate-delay-100 {
+            animation-delay: 100ms;
+        }
+
+        .animate-delay-200 {
+            animation-delay: 200ms;
+        }
+
+        .animate-delay-300 {
+            animation-delay: 300ms;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-item.active {
+            background: rgb(219 234 254);
+            color: rgb(29 78 216);
+            font-weight: 600;
+        }
+
+        .nav-item:not(.active) {
+            color: rgb(71 85 105);
+        }
+
+        .nav-item:not(.active):hover {
+            color: rgb(30 41 59);
+            background: rgb(241 245 249);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(to bottom right, rgb(239 246 255), rgb(238 242 255), rgb(250 245 255));
+        }
+
+        .card {
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        .framework-tab {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .framework-tab.active {
+            background: linear-gradient(to right, rgb(59 130 246), rgb(99 102 241));
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+        }
+
+        .framework-section {
+            display: none;
+            opacity: 0;
+            animation: slideUp 0.5s ease-out forwards;
+        }
+
+        .framework-section.active {
+            display: block;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .tooltip {
+            position: relative;
+        }
+
+        .tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgb(30 41 59);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            z-index: 10;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <!-- Top Navigation -->
+    <nav class="border-b border-white/60 bg-white/80 backdrop-blur-xl sticky top-0 z-50 shadow-sm">
+        <div class="max-w-[1800px] mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <div onclick="window.location.href='index.html'" class="flex items-center gap-3 cursor-pointer group">
+                    <div class="w-10 h-10 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-xl flex items-center justify-center shadow-md transition-transform duration-300 group-hover:rotate-6">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                            Strategic Platform
+                        </h1>
+                        <p class="text-xs text-slate-500">Business Data Analysis</p>
+                    </div>
+                </div>
+
+                <!-- Main Navigation -->
+                <div class="flex items-center gap-8">
+                    <button onclick="window.location.href='index.html'" class="nav-item flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                        <span class="text-sm">Dashboard</span>
+                    </button>
+                    <button class="nav-item flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        <span class="text-sm">Projects</span>
+                    </button>
+                    <button class="nav-item active flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                        </svg>
+                        <span class="text-sm">Strategic Positioning</span>
+                    </button>
+                    <button class="nav-item flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span class="text-sm">Settings</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-[1800px] mx-auto px-6 py-8">
+        <!-- Header Section -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-3xl font-bold text-slate-800 mb-2">Strategic Positioning Analysis</h2>
+                    <p class="text-slate-600">เลือกกรอบการวิเคราะห์ที่เหมาะสมกับธุรกิจของคุณ</p>
+                </div>
+                <button onclick="exportAnalysis()" class="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-300">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                    </svg>
+                    Export Analysis
+                </button>
+            </div>
+        </div>
+
+        <!-- Framework Tabs -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-2 mb-8 shadow-sm">
+            <div class="grid grid-cols-3 gap-2">
+                <button onclick="switchFramework('swot')" id="tab-swot" class="framework-tab active px-6 py-4 rounded-xl font-semibold flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                    </svg>
+                    SWOT Analysis
+                </button>
+                <button onclick="switchFramework('porter')" id="tab-porter" class="framework-tab px-6 py-4 rounded-xl font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                    Porter's 5 Forces
+                </button>
+                <button onclick="switchFramework('blueocean')" id="tab-blueocean" class="framework-tab px-6 py-4 rounded-xl font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Blue Ocean Strategy
+                </button>
+            </div>
+        </div>
+
+        <!-- SWOT Analysis Section -->
+        <div id="section-swot" class="framework-section active">
+            <div class="bg-white border border-slate-200 rounded-2xl p-8 shadow-sm mb-6">
+                <div class="flex items-start justify-between mb-6">
+                    <div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-2">SWOT Analysis</h3>
+                        <p class="text-slate-600">วิเคราะห์จุดแข็ง จุดอ่อน โอกาส และภาวะคุกคามของธุรกิจ</p>
+                    </div>
+                    <span class="px-4 py-2 bg-green-100 text-green-700 rounded-lg font-semibold text-sm">Beginner Friendly</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-6">
+                    <!-- Strengths -->
+                    <div class="border-2 border-green-200 rounded-xl p-6 bg-gradient-to-br from-green-50 to-emerald-50">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-green-800">Strengths (จุดแข็ง)</h4>
+                                <p class="text-xs text-green-600">สิ่งที่ธุรกิจทำได้ดี</p>
+                            </div>
+                        </div>
+                        <textarea id="swot-strengths" class="w-full px-4 py-3 border border-green-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent" placeholder="ตัวอย่าง:&#10;- แบรนด์ที่แข็งแกร่งและเป็นที่รู้จัก&#10;- ทีมงานที่มีความเชี่ยวชาญ&#10;- เทคโนโลยีที่ทันสมัย&#10;- ต้นทุนการผลิตต่ำ"></textarea>
+                        <div class="mt-2 flex items-center gap-2 text-xs text-green-600">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span>คิดถึงสิ่งที่ธุรกิจของคุณทำได้ดีกว่าคู่แข่ง</span>
+                        </div>
+                    </div>
+
+                    <!-- Weaknesses -->
+                    <div class="border-2 border-red-200 rounded-xl p-6 bg-gradient-to-br from-red-50 to-rose-50">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-red-800">Weaknesses (จุดอ่อน)</h4>
+                                <p class="text-xs text-red-600">สิ่งที่ต้องพัฒนา</p>
+                            </div>
+                        </div>
+                        <textarea id="swot-weaknesses" class="w-full px-4 py-3 border border-red-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent" placeholder="ตัวอย่าง:&#10;- งบประมาณทางการตลาดจำกัด&#10;- ขาดทีมงาน IT ที่เข้มแข็ง&#10;- ระบบการจัดการล้าสมัย&#10;- ช่องทางการจัดจำหน่ายน้อย"></textarea>
+                        <div class="mt-2 flex items-center gap-2 text-xs text-red-600">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span>ซื่อสัตย์กับข้อจำกัดที่มี เพื่อหาทางแก้ไข</span>
+                        </div>
+                    </div>
+
+                    <!-- Opportunities -->
+                    <div class="border-2 border-blue-200 rounded-xl p-6 bg-gradient-to-br from-blue-50 to-cyan-50">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-blue-800">Opportunities (โอกาส)</h4>
+                                <p class="text-xs text-blue-600">โอกาสจากภายนอก</p>
+                            </div>
+                        </div>
+                        <textarea id="swot-opportunities" class="w-full px-4 py-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent" placeholder="ตัวอย่าง:&#10;- ตลาดใหม่ที่กำลังเติบโต&#10;- เทรนด์ที่เอื้ออำนวย&#10;- เทคโนโลยีใหม่&#10;- พันธมิตรทางธุรกิจที่มีศักยภาพ"></textarea>
+                        <div class="mt-2 flex items-center gap-2 text-xs text-blue-600">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span>มองหาแนวโน้มและโอกาสในตลาด</span>
+                        </div>
+                    </div>
+
+                    <!-- Threats -->
+                    <div class="border-2 border-amber-200 rounded-xl p-6 bg-gradient-to-br from-amber-50 to-yellow-50">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 bg-amber-500 rounded-lg flex items-center justify-center">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-amber-800">Threats (ภาวะคุกคาม)</h4>
+                                <p class="text-xs text-amber-600">อุปสรรคจากภายนอก</p>
+                            </div>
+                        </div>
+                        <textarea id="swot-threats" class="w-full px-4 py-3 border border-amber-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent" placeholder="ตัวอย่าง:&#10;- คู่แข่งรายใหม่เข้าสู่ตลาด&#10;- การเปลี่ยนแปลงของกฎหมาย&#10;- ภาวะเศรษฐกิจตกต่ำ&#10;- การเปลี่ยนแปลงพฤติกรรมผู้บริโภค"></textarea>
+                        <div class="mt-2 flex items-center gap-2 text-xs text-amber-600">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span>ระบุความเสี่ยงที่อาจส่งผลกระทบต่อธุรกิจ</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex gap-4">
+                    <button onclick="clearSWOT()" class="flex-1 px-6 py-3 border-2 border-slate-300 text-slate-700 rounded-xl font-semibold hover:bg-slate-50 transition-all duration-300">
+                        Clear All
+                    </button>
+                    <button onclick="saveSWOT()" class="flex-1 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-green-500/30 transition-all duration-300">
+                        Save Analysis
+                    </button>
+                </div>
+            </div>
+
+            <!-- SWOT Strategy Matrix -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-8 shadow-sm">
+                <h3 class="text-xl font-bold text-slate-800 mb-4">Strategic Actions (กลยุทธ์ที่แนะนำ)</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="p-4 bg-gradient-to-br from-green-50 to-blue-50 border border-green-200 rounded-xl">
+                        <h4 class="font-bold text-green-700 mb-2">💪 S-O Strategies</h4>
+                        <p class="text-sm text-slate-600">ใช้จุดแข็งเพื่อใช้ประโยชน์จากโอกาส</p>
+                    </div>
+                    <div class="p-4 bg-gradient-to-br from-green-50 to-amber-50 border border-amber-200 rounded-xl">
+                        <h4 class="font-bold text-amber-700 mb-2">🛡️ S-T Strategies</h4>
+                        <p class="text-sm text-slate-600">ใช้จุดแข็งเพื่อหลีกเลี่ยงหรือลดภาวะคุกคาม</p>
+                    </div>
+                    <div class="p-4 bg-gradient-to-br from-red-50 to-blue-50 border border-blue-200 rounded-xl">
+                        <h4 class="font-bold text-blue-700 mb-2">🔧 W-O Strategies</h4>
+                        <p class="text-sm text-slate-600">พัฒนาจุดอ่อนเพื่อใช้ประโยชน์จากโอกาส</p>
+                    </div>
+                    <div class="p-4 bg-gradient-to-br from-red-50 to-amber-50 border border-red-200 rounded-xl">
+                        <h4 class="font-bold text-red-700 mb-2">⚠️ W-T Strategies</h4>
+                        <p class="text-sm text-slate-600">ลดจุดอ่อนและหลีกเลี่ยงภาวะคุกคาม</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Porter's 5 Forces Section -->
+        <div id="section-porter" class="framework-section">
+            <div class="bg-white border border-slate-200 rounded-2xl p-8 shadow-sm">
+                <div class="flex items-start justify-between mb-6">
+                    <div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-2">Porter's Five Forces Analysis</h3>
+                        <p class="text-slate-600">วิเคราะห์แรงกดดันจาก 5 ปัจจัยที่มีผลต่อความสามารถในการทำกำไร</p>
+                    </div>
+                    <span class="px-4 py-2 bg-amber-100 text-amber-700 rounded-lg font-semibold text-sm">Intermediate</span>
+                </div>
+
+                <div class="space-y-6">
+                    <!-- Force 1: Competitive Rivalry -->
+                    <div class="border-2 border-purple-200 rounded-xl p-6 bg-gradient-to-br from-purple-50 to-pink-50">
+                        <div class="flex items-start gap-4 mb-4">
+                            <div class="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                </svg>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h4 class="text-lg font-bold text-purple-800">1. Competitive Rivalry (การแข่งขันในอุตสาหกรรม)</h4>
+                                    <select id="porter-rivalry" class="px-3 py-1 border border-purple-300 rounded-lg text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-purple-400">
+                                        <option value="">เลือกระดับ</option>
+                                        <option value="low">ต่ำ</option>
+                                        <option value="medium">ปานกลาง</option>
+                                        <option value="high">สูง</option>
+                                    </select>
+                                </div>
+                                <p class="text-sm text-purple-600 mb-3">ความเข้มข้นของการแข่งขันระหว่างคู่แข่งในตลาด</p>
+                                <textarea id="porter-rivalry-notes" class="w-full px-4 py-3 border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent" placeholder="คำถามที่ช่วยคิด:&#10;- มีคู่แข่งกี่ราย?&#10;- ตลาดกำลังเติบโตหรือซบเซา?&#10;- ความแตกต่างของสินค้า/บริการมากน้อยแค่ไหน?&#10;- ต้นทุนในการเปลี่ยนไปใช้คู่แข่ง (switching cost) สูงหรือต่ำ?"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Force 2: Threat of New Entrants -->
+                    <div class="border-2 border-blue-200 rounded-xl p-6 bg-gradient-to-br from-blue-50 to-cyan-50">
+                        <div class="flex items-start gap-4 mb-4">
+                            <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+                                </svg>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h4 class="text-lg font-bold text-blue-800">2. Threat of New Entrants (ภาวะคุกคามจากผู้เข้าใหม่)</h4>
+                                    <select id="porter-entrants" class="px-3 py-1 border border-blue-300 rounded-lg text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-400">
+                                        <option value="">เลือกระดับ</option>
+                                        <option value="low">ต่ำ</option>
+                                        <option value="medium">ปานกลาง</option>
+                                        <option value="high">สูง</option>
+                                    </select>
+                                </div>
+                                <p class="text-sm text-blue-600 mb-3">ความง่ายในการที่คู่แข่งรายใหม่จะเข้ามาในตลาด</p>
+                                <textarea id="porter-entrants-notes" class="w-full px-4 py-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent" placeholder="คำถามที่ช่วยคิด:&#10;- ต้องใช้เงินลงทุนเริ่มต้นมากน้อยแค่ไหน?&#10;- มีข้อจำกัดทางกฎหมายหรือไม่?&#10;- ความภักดีต่อแบรนด์ในตลาดแข็งแกร่งหรือไม่?&#10;- ต้องใช้เทคโนโลยีพิเศษหรือไม่?"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Force 3: Bargaining Power of Suppliers -->
+                    <div class="border-2 border-green-200 rounded-xl p-6 bg-gradient-to-br from-green-50 to-emerald-50">
+                        <div class="flex items-start gap-4 mb-4">
+                            <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                                </svg>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h4 class="text-lg font-bold text-green-800">3. Bargaining Power of Suppliers (อำนาจต่อรองของซัพพลายเออร์)</h4>
+                                    <select id="porter-suppliers" class="px-3 py-1 border border-green-300 rounded-lg text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-green-400">
+                                        <option value="">เลือกระดับ</option>
+                                        <option value="low">ต่ำ</option>
+                                        <option value="medium">ปานกลาง</option>
+                                        <option value="high">สูง</option>
+                                    </select>
+                                </div>
+                                <p class="text-sm text-green-600 mb-3">ความสามารถของซัพพลายเออร์ในการควบคุมราคาและเงื่อนไข</p>
+                                <textarea id="porter-suppliers-notes" class="w-full px-4 py-3 border border-green-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent" placeholder="คำถามที่ช่วยคิด:&#10;- มีซัพพลายเออร์กี่ราย?&#10;- สามารถเปลี่ยนซัพพลายเออร์ได้ง่ายหรือไม่?&#10;- ซัพพลายเออร์มีส่วนแบ่งตลาดมากน้อยแค่ไหน?&#10;- มีวัตถุดิบทดแทนหรือไม่?"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Force 4: Bargaining Power of Buyers -->
+                    <div class="border-2 border-amber-200 rounded-xl p-6 bg-gradient-to-br from-amber-50 to-yellow-50">
+                        <div class="flex items-start gap-4 mb-4">
+                            <div class="w-12 h-12 bg-amber-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                </svg>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h4 class="text-lg font-bold text-amber-800">4. Bargaining Power of Buyers (อำนาจต่อรองของลูกค้า)</h4>
+                                    <select id="porter-buyers" class="px-3 py-1 border border-amber-300 rounded-lg text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-amber-400">
+                                        <option value="">เลือกระดับ</option>
+                                        <option value="low">ต่ำ</option>
+                                        <option value="medium">ปานกลาง</option>
+                                        <option value="high">สูง</option>
+                                    </select>
+                                </div>
+                                <p class="text-sm text-amber-600 mb-3">ความสามารถของลูกค้าในการต่อรองราคาและเงื่อนไข</p>
+                                <textarea id="porter-buyers-notes" class="w-full px-4 py-3 border border-amber-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent" placeholder="คำถามที่ช่วยคิด:&#10;- ลูกค้ามีทางเลือกมากน้อยแค่ไหน?&#10;- ลูกค้าซื้อในปริมาณมากหรือไม่?&#10;- ต้นทุนในการเปลี่ยนแบรนด์สูงหรือต่ำ?&#10;- ข้อมูลราคามีความโปร่งใสหรือไม่?"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Force 5: Threat of Substitutes -->
+                    <div class="border-2 border-red-200 rounded-xl p-6 bg-gradient-to-br from-red-50 to-rose-50">
+                        <div class="flex items-start gap-4 mb-4">
+                            <div class="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+                                </svg>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h4 class="text-lg font-bold text-red-800">5. Threat of Substitutes (ภาวะคุกคามจากสินค้าทดแทน)</h4>
+                                    <select id="porter-substitutes" class="px-3 py-1 border border-red-300 rounded-lg text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-red-400">
+                                        <option value="">เลือกระดับ</option>
+                                        <option value="low">ต่ำ</option>
+                                        <option value="medium">ปานกลาง</option>
+                                        <option value="high">สูง</option>
+                                    </select>
+                                </div>
+                                <p class="text-sm text-red-600 mb-3">ความเสี่ยงที่ลูกค้าจะหันไปใช้สินค้าหรือบริการทดแทน</p>
+                                <textarea id="porter-substitutes-notes" class="w-full px-4 py-3 border border-red-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent" placeholder="คำถามที่ช่วยคิด:&#10;- มีสินค้าทดแทนที่ตอบโจทย์เดียวกันหรือไม่?&#10;- สินค้าทดแทนมีราคาถูกกว่าหรือไม่?&#10;- สินค้าทดแทนมีคุณภาพใกล้เคียงหรือดีกว่าหรือไม่?&#10;- ลูกค้ามีแนวโน้มที่จะเปลี่ยนไปใช้สินค้าทดแทนหรือไม่?"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex gap-4">
+                    <button onclick="clearPorter()" class="flex-1 px-6 py-3 border-2 border-slate-300 text-slate-700 rounded-xl font-semibold hover:bg-slate-50 transition-all duration-300">
+                        Clear All
+                    </button>
+                    <button onclick="savePorter()" class="flex-1 px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-300">
+                        Save Analysis
+                    </button>
+                </div>
+
+                <!-- Industry Attractiveness Summary -->
+                <div class="mt-6 p-6 bg-gradient-to-br from-slate-50 to-blue-50 border-2 border-blue-200 rounded-xl">
+                    <h4 class="text-lg font-bold text-slate-800 mb-3">📊 Industry Attractiveness (ความน่าสนใจของอุตสาหกรรม)</h4>
+                    <div id="porter-summary" class="text-sm text-slate-600">
+                        <p>กรอกข้อมูลในแต่ละปัจจัยเพื่อดูสรุปความน่าสนใจของอุตสาหกรรม</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Blue Ocean Strategy Section -->
+        <div id="section-blueocean" class="framework-section">
+            <div class="bg-white border border-slate-200 rounded-2xl p-8 shadow-sm">
+                <div class="flex items-start justify-between mb-6">
+                    <div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-2">Blue Ocean Strategy</h3>
+                        <p class="text-slate-600">สร้างพื้นที่ตลาดใหม่ที่ไม่มีการแข่งขัน โดยใช้กรอบ ERRC</p>
+                    </div>
+                    <span class="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-semibold text-sm">Advanced</span>
+                </div>
+
+                <div class="mb-8 p-6 bg-gradient-to-br from-blue-50 to-cyan-50 border border-blue-200 rounded-xl">
+                    <h4 class="text-lg font-bold text-blue-800 mb-2">🎯 ERRC Framework</h4>
+                    <p class="text-sm text-slate-600 mb-3">ใช้ 4 คำถามเพื่อสร้างนวัตกรรมคุณค่าใหม่ (Value Innovation)</p>
+                    <div class="grid grid-cols-2 gap-3 text-xs">
+                        <div class="flex items-start gap-2">
+                            <span class="font-bold text-red-600">E:</span>
+                            <span class="text-slate-700">Eliminate - ปัจจัยใดควรจะตัดออก</span>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <span class="font-bold text-blue-600">R:</span>
+                            <span class="text-slate-700">Raise - ปัจจัยใดควรเพิ่มสูงกว่ามาตรฐาน</span>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <span class="font-bold text-amber-600">R:</span>
+                            <span class="text-slate-700">Reduce - ปัจจัยใดควรลดลง</span>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <span class="font-bold text-green-600">C:</span>
+                            <span class="text-slate-700">Create - ปัจจัยใหม่ที่ควรสร้างขึ้น</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-6">
+                    <!-- Eliminate -->
+                    <div class="border-2 border-red-200 rounded-xl p-6 bg-gradient-to-br from-red-50 to-rose-50">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-red-800">Eliminate (ตัดออก)</h4>
+                                <p class="text-xs text-red-600">สิ่งที่อุตสาหกรรมยึดถืออยู่แต่ไม่จำเป็น</p>
+                            </div>
+                        </div>
+                        <textarea id="blue-eliminate" class="w-full px-4 py-3 border border-red-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent" placeholder="ตัวอย่าง:&#10;- คุณสมบัติที่ลูกค้าไม่ใช้&#10;- กระบวนการที่ซับซ้อนเกินไป&#10;- ต้นทุนที่ไม่เพิ่มคุณค่า&#10;- ฟีเจอร์ที่ล้าสมัย"></textarea>
+                        <div class="mt-2 flex items-center gap-2 text-xs text-red-600">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span>อะไรที่เป็น "ข้อตกลงเบื้องต้น" แต่จริงๆ ไม่จำเป็น?</span>
+                        </div>
+                    </div>
+
+                    <!-- Reduce -->
+                    <div class="border-2 border-amber-200 rounded-xl p-6 bg-gradient-to-br from-amber-50 to-yellow-50">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 bg-amber-500 rounded-lg flex items-center justify-center">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-amber-800">Reduce (ลดลง)</h4>
+                                <p class="text-xs text-amber-600">สิ่งที่ควรลดลงต่ำกว่ามาตรฐาน</p>
+                            </div>
+                        </div>
+                        <textarea id="blue-reduce" class="w-full px-4 py-3 border border-amber-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent" placeholder="ตัวอย่าง:&#10;- คุณสมบัติที่มากเกินความต้องการ&#10;- ต้นทุนที่สูงเกินจำเป็น&#10;- ระดับบริการที่ซับซ้อนเกินไป&#10;- ตัวเลือกที่มากจนเกินไป"></textarea>
+                        <div class="mt-2 flex items-center gap-2 text-xs text-amber-600">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span>อะไรที่มากเกินไปจนทำให้ซับซ้อนหรือแพง?</span>
+                        </div>
+                    </div>
+
+                    <!-- Raise -->
+                    <div class="border-2 border-blue-200 rounded-xl p-6 bg-gradient-to-br from-blue-50 to-cyan-50">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-blue-800">Raise (ยกระดับ)</h4>
+                                <p class="text-xs text-blue-600">สิ่งที่ควรเพิ่มสูงกว่ามาตรฐาน</p>
+                            </div>
+                        </div>
+                        <textarea id="blue-raise" class="w-full px-4 py-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent" placeholder="ตัวอย่าง:&#10;- คุณภาพในจุดที่สำคัญ&#10;- ประสบการณ์ลูกค้าในจุดสำคัญ&#10;- ความสะดวกสบาย&#10;- ความเร็วในการให้บริการ"></textarea>
+                        <div class="mt-2 flex items-center gap-2 text-xs text-blue-600">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span>อะไรที่ควรทำได้ดีกว่าคู่แข่งอย่างมีนัยสำคัญ?</span>
+                        </div>
+                    </div>
+
+                    <!-- Create -->
+                    <div class="border-2 border-green-200 rounded-xl p-6 bg-gradient-to-br from-green-50 to-emerald-50">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-green-800">Create (สร้างใหม่)</h4>
+                                <p class="text-xs text-green-600">สิ่งใหม่ที่อุตสาหกรรมยังไม่เคยมี</p>
+                            </div>
+                        </div>
+                        <textarea id="blue-create" class="w-full px-4 py-3 border border-green-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent" placeholder="ตัวอย่าง:&#10;- คุณค่าใหม่ที่ลูกค้าต้องการแต่ยังไม่มีใครทำ&#10;- ประสบการณ์แบบใหม่&#10;- โมเดลธุรกิจใหม่&#10;- ช่องทางการให้บริการใหม่"></textarea>
+                        <div class="mt-2 flex items-center gap-2 text-xs text-green-600">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span>อะไรที่อุตสาหกรรมไม่เคยเสนอให้ลูกค้า?</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex gap-4">
+                    <button onclick="clearBlueOcean()" class="flex-1 px-6 py-3 border-2 border-slate-300 text-slate-700 rounded-xl font-semibold hover:bg-slate-50 transition-all duration-300">
+                        Clear All
+                    </button>
+                    <button onclick="saveBlueOcean()" class="flex-1 px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-300">
+                        Save Analysis
+                    </button>
+                </div>
+
+                <!-- Strategy Canvas Visualization Placeholder -->
+                <div class="mt-8 p-6 bg-gradient-to-br from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-xl">
+                    <h4 class="text-lg font-bold text-slate-800 mb-3">📈 Strategy Canvas</h4>
+                    <p class="text-sm text-slate-600 mb-4">
+                        Strategy Canvas จะแสดงความแตกต่างระหว่าง "Red Ocean" (ตลาดแข่งขันสูง) และ "Blue Ocean" (ตลาดใหม่ที่คุณสร้าง)
+                    </p>
+                    <div class="bg-white p-8 rounded-lg border border-blue-200 text-center">
+                        <svg class="w-24 h-24 mx-auto text-blue-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                        <p class="text-slate-500 text-sm">กรอกข้อมูล ERRC เพื่อดูแผนภูมิเปรียบเทียบกลยุทธ์</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Framework Switching
+        function switchFramework(framework) {
+            // Hide all sections
+            document.querySelectorAll('.framework-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.framework-tab').forEach(tab => {
+                tab.classList.remove('active');
+                tab.classList.add('bg-slate-100', 'text-slate-700', 'hover:bg-slate-200');
+            });
+            
+            // Show selected section
+            document.getElementById(`section-${framework}`).classList.add('active');
+            
+            // Activate selected tab
+            const activeTab = document.getElementById(`tab-${framework}`);
+            activeTab.classList.add('active');
+            activeTab.classList.remove('bg-slate-100', 'text-slate-700', 'hover:bg-slate-200');
+        }
+
+        // SWOT Functions
+        function clearSWOT() {
+            if (confirm('คุณต้องการล้างข้อมูล SWOT Analysis ทั้งหมดหรือไม่?')) {
+                document.getElementById('swot-strengths').value = '';
+                document.getElementById('swot-weaknesses').value = '';
+                document.getElementById('swot-opportunities').value = '';
+                document.getElementById('swot-threats').value = '';
+            }
+        }
+
+        function saveSWOT() {
+            const data = {
+                strengths: document.getElementById('swot-strengths').value,
+                weaknesses: document.getElementById('swot-weaknesses').value,
+                opportunities: document.getElementById('swot-opportunities').value,
+                threats: document.getElementById('swot-threats').value,
+                timestamp: new Date().toISOString()
+            };
+            
+            localStorage.setItem('swot-analysis', JSON.stringify(data));
+            alert('✅ บันทึก SWOT Analysis สำเร็จ!');
+        }
+
+        // Porter's 5 Forces Functions
+        function clearPorter() {
+            if (confirm('คุณต้องการล้างข้อมูล Porter\'s 5 Forces ทั้งหมดหรือไม่?')) {
+                document.getElementById('porter-rivalry').value = '';
+                document.getElementById('porter-rivalry-notes').value = '';
+                document.getElementById('porter-entrants').value = '';
+                document.getElementById('porter-entrants-notes').value = '';
+                document.getElementById('porter-suppliers').value = '';
+                document.getElementById('porter-suppliers-notes').value = '';
+                document.getElementById('porter-buyers').value = '';
+                document.getElementById('porter-buyers-notes').value = '';
+                document.getElementById('porter-substitutes').value = '';
+                document.getElementById('porter-substitutes-notes').value = '';
+            }
+        }
+
+        function savePorter() {
+            const data = {
+                rivalry: {
+                    level: document.getElementById('porter-rivalry').value,
+                    notes: document.getElementById('porter-rivalry-notes').value
+                },
+                entrants: {
+                    level: document.getElementById('porter-entrants').value,
+                    notes: document.getElementById('porter-entrants-notes').value
+                },
+                suppliers: {
+                    level: document.getElementById('porter-suppliers').value,
+                    notes: document.getElementById('porter-suppliers-notes').value
+                },
+                buyers: {
+                    level: document.getElementById('porter-buyers').value,
+                    notes: document.getElementById('porter-buyers-notes').value
+                },
+                substitutes: {
+                    level: document.getElementById('porter-substitutes').value,
+                    notes: document.getElementById('porter-substitutes-notes').value
+                },
+                timestamp: new Date().toISOString()
+            };
+            
+            localStorage.setItem('porter-analysis', JSON.stringify(data));
+            updatePorterSummary();
+            alert('✅ บันทึก Porter\'s 5 Forces Analysis สำเร็จ!');
+        }
+
+        function updatePorterSummary() {
+            const levels = {
+                'porter-rivalry': document.getElementById('porter-rivalry').value,
+                'porter-entrants': document.getElementById('porter-entrants').value,
+                'porter-suppliers': document.getElementById('porter-suppliers').value,
+                'porter-buyers': document.getElementById('porter-buyers').value,
+                'porter-substitutes': document.getElementById('porter-substitutes').value
+            };
+
+            const highCount = Object.values(levels).filter(v => v === 'high').length;
+            const mediumCount = Object.values(levels).filter(v => v === 'medium').length;
+            
+            let summary = '';
+            if (highCount >= 3) {
+                summary = '🔴 อุตสาหกรรมนี้มีความน่าสนใจต่ำ - แรงกดดันสูงจากหลายปัจจัย อาจทำกำไรได้ยาก';
+            } else if (highCount === 0 && mediumCount <= 2) {
+                summary = '🟢 อุตสาหกรรมนี้มีความน่าสนใจสูง - แรงกดดันต่ำ มีโอกาสทำกำไรได้ดี';
+            } else {
+                summary = '🟡 อุตสาหกรรมนี้มีความน่าสนใจปานกลาง - ควรเลือกกลยุทธ์ที่เหมาะสมเพื่อสร้างความได้เปรียบ';
+            }
+
+            document.getElementById('porter-summary').innerHTML = `<p class="font-semibold">${summary}</p>`;
+        }
+
+        // Blue Ocean Functions
+        function clearBlueOcean() {
+            if (confirm('คุณต้องการล้างข้อมูล Blue Ocean Strategy ทั้งหมดหรือไม่?')) {
+                document.getElementById('blue-eliminate').value = '';
+                document.getElementById('blue-reduce').value = '';
+                document.getElementById('blue-raise').value = '';
+                document.getElementById('blue-create').value = '';
+            }
+        }
+
+        function saveBlueOcean() {
+            const data = {
+                eliminate: document.getElementById('blue-eliminate').value,
+                reduce: document.getElementById('blue-reduce').value,
+                raise: document.getElementById('blue-raise').value,
+                create: document.getElementById('blue-create').value,
+                timestamp: new Date().toISOString()
+            };
+            
+            localStorage.setItem('blueocean-analysis', JSON.stringify(data));
+            alert('✅ บันทึก Blue Ocean Strategy สำเร็จ!');
+        }
+
+        // Export All Analysis
+        function exportAnalysis() {
+            const allData = {
+                swot: JSON.parse(localStorage.getItem('swot-analysis') || '{}'),
+                porter: JSON.parse(localStorage.getItem('porter-analysis') || '{}'),
+                blueocean: JSON.parse(localStorage.getItem('blueocean-analysis') || '{}'),
+                exportDate: new Date().toISOString()
+            };
+
+            const dataStr = JSON.stringify(allData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `strategic-positioning-analysis-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Load saved data on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            // Load SWOT data
+            const swotData = JSON.parse(localStorage.getItem('swot-analysis') || '{}');
+            if (swotData.strengths) document.getElementById('swot-strengths').value = swotData.strengths;
+            if (swotData.weaknesses) document.getElementById('swot-weaknesses').value = swotData.weaknesses;
+            if (swotData.opportunities) document.getElementById('swot-opportunities').value = swotData.opportunities;
+            if (swotData.threats) document.getElementById('swot-threats').value = swotData.threats;
+
+            // Load Porter data
+            const porterData = JSON.parse(localStorage.getItem('porter-analysis') || '{}');
+            if (porterData.rivalry) {
+                document.getElementById('porter-rivalry').value = porterData.rivalry.level || '';
+                document.getElementById('porter-rivalry-notes').value = porterData.rivalry.notes || '';
+            }
+            if (porterData.entrants) {
+                document.getElementById('porter-entrants').value = porterData.entrants.level || '';
+                document.getElementById('porter-entrants-notes').value = porterData.entrants.notes || '';
+            }
+            if (porterData.suppliers) {
+                document.getElementById('porter-suppliers').value = porterData.suppliers.level || '';
+                document.getElementById('porter-suppliers-notes').value = porterData.suppliers.notes || '';
+            }
+            if (porterData.buyers) {
+                document.getElementById('porter-buyers').value = porterData.buyers.level || '';
+                document.getElementById('porter-buyers-notes').value = porterData.buyers.notes || '';
+            }
+            if (porterData.substitutes) {
+                document.getElementById('porter-substitutes').value = porterData.substitutes.level || '';
+                document.getElementById('porter-substitutes-notes').value = porterData.substitutes.notes || '';
+            }
+
+            // Load Blue Ocean data
+            const blueData = JSON.parse(localStorage.getItem('blueocean-analysis') || '{}');
+            if (blueData.eliminate) document.getElementById('blue-eliminate').value = blueData.eliminate;
+            if (blueData.reduce) document.getElementById('blue-reduce').value = blueData.reduce;
+            if (blueData.raise) document.getElementById('blue-raise').value = blueData.raise;
+            if (blueData.create) document.getElementById('blue-create').value = blueData.create;
+        });
+
+        // Add change listeners for Porter's forces to update summary
+        ['porter-rivalry', 'porter-entrants', 'porter-suppliers', 'porter-buyers', 'porter-substitutes'].forEach(id => {
+            document.getElementById(id).addEventListener('change', updatePorterSummary);
+        });
+    </script>
+</body>
+</html>

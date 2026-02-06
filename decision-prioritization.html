@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decision & Prioritization - Business Data Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-slide-up {
+            animation: slideUp 0.6s ease-out forwards;
+        }
+
+        .animate-delay-100 {
+            animation-delay: 100ms;
+        }
+
+        .animate-delay-200 {
+            animation-delay: 200ms;
+        }
+
+        .animate-delay-300 {
+            animation-delay: 300ms;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-item.active {
+            background: rgb(219 234 254);
+            color: rgb(29 78 216);
+            font-weight: 600;
+        }
+
+        .nav-item:not(.active) {
+            color: rgb(71 85 105);
+        }
+
+        .nav-item:not(.active):hover {
+            color: rgb(30 41 59);
+            background: rgb(241 245 249);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(to bottom right, rgb(239 246 255), rgb(238 242 255), rgb(250 245 255));
+        }
+
+        .card {
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        .framework-tab {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .framework-tab.active {
+            background: linear-gradient(to right, rgb(16 185 129), rgb(5 150 105));
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3);
+        }
+
+        .framework-section {
+            display: none;
+            opacity: 0;
+            animation: slideUp 0.5s ease-out forwards;
+        }
+
+        .framework-section.active {
+            display: block;
+        }
+
+        textarea, input[type="text"], input[type="number"] {
+            resize: vertical;
+        }
+
+        .task-item {
+            cursor: move;
+            transition: all 0.2s ease;
+        }
+
+        .task-item:hover {
+            transform: scale(1.02);
+        }
+
+        .criteria-row {
+            transition: all 0.3s ease;
+        }
+
+        .criteria-row:hover {
+            background: rgb(249 250 251);
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <!-- Top Navigation -->
+    <nav class="border-b border-white/60 bg-white/80 backdrop-blur-xl sticky top-0 z-50 shadow-sm">
+        <div class="max-w-[1800px] mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <div onclick="window.location.href='index.html'" class="flex items-center gap-3 cursor-pointer group">
+                    <div class="w-10 h-10 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-xl flex items-center justify-center shadow-md transition-transform duration-300 group-hover:rotate-6">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                            Strategic Platform
+                        </h1>
+                        <p class="text-xs text-slate-500">Business Data Analysis</p>
+                    </div>
+                </div>
+
+                <!-- Main Navigation -->
+                <div class="flex items-center gap-8">
+                    <button onclick="window.location.href='index.html'" class="nav-item flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                        <span class="text-sm">Dashboard</span>
+                    </button>
+                    <button class="nav-item flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        <span class="text-sm">Projects</span>
+                    </button>
+                    <button class="nav-item active flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span class="text-sm">Decision & Prioritization</span>
+                    </button>
+                    <button class="nav-item flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span class="text-sm">Settings</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-[1800px] mx-auto px-6 py-8">
+        <!-- Header Section -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-3xl font-bold text-slate-800 mb-2">Decision & Prioritization Tools</h2>
+                    <p class="text-slate-600">เครื่องมือช่วยตัดสินใจและจัดลำดับความสำคัญอย่างมีประสิทธิภาพ</p>
+                </div>
+                <button onclick="exportAnalysis()" class="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-emerald-500/30 transition-all duration-300">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                    </svg>
+                    Export Analysis
+                </button>
+            </div>
+        </div>
+
+        <!-- Framework Tabs -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-2 mb-8 shadow-sm">
+            <div class="grid grid-cols-3 gap-2">
+                <button onclick="switchFramework('eisenhower')" id="tab-eisenhower" class="framework-tab active px-6 py-4 rounded-xl font-semibold flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path>
+                    </svg>
+                    Eisenhower Matrix
+                </button>
+                <button onclick="switchFramework('decision')" id="tab-decision" class="framework-tab px-6 py-4 rounded-xl font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                    </svg>
+                    Decision Matrix
+                </button>
+                <button onclick="switchFramework('costbenefit')" id="tab-costbenefit" class="framework-tab px-6 py-4 rounded-xl font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Cost-Benefit
+                </button>
+            </div>
+        </div>
+
+        <!-- Eisenhower Matrix Section -->
+        <div id="section-eisenhower" class="framework-section active">
+            <div class="bg-white border border-slate-200 rounded-2xl p-8 shadow-sm">
+                <div class="flex items-start justify-between mb-6">
+                    <div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-2">Eisenhower Matrix (Urgent-Important)</h3>
+                        <p class="text-slate-600">จัดลำดับความสำคัญของงานตามความเร่งด่วนและความสำคัญ</p>
+                    </div>
+                    <span class="px-4 py-2 bg-green-100 text-green-700 rounded-lg font-semibold text-sm">Beginner Friendly</span>
+                </div>
+
+                <!-- 2x2 Matrix Grid -->
+                <div class="grid grid-cols-2 gap-6 mb-8">
+                    <!-- Quadrant 1: Urgent & Important (DO) -->
+                    <div class="border-2 border-red-300 rounded-xl p-6 bg-gradient-to-br from-red-50 to-rose-50 min-h-[300px]">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-bold text-red-800">DO (ทำทันที)</h4>
+                                    <p class="text-xs text-red-600">เร่งด่วน + สำคัญ</p>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 bg-red-200 text-red-800 rounded-lg text-xs font-bold">Q1</span>
+                        </div>
+                        <textarea id="eisenhower-q1" class="w-full px-4 py-3 border border-red-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent min-h-[180px]" placeholder="ตัวอย่าง:&#10;- วิกฤตที่ต้องแก้ไขด่วน&#10;- Deadline ที่ใกล้เข้ามา&#10;- ปัญหาเร่งด่วนจากลูกค้า&#10;- โปรเจกต์สำคัญที่ต้องส่ง"></textarea>
+                        <p class="mt-2 text-xs text-red-600 font-semibold">⚡ ทำทันที - อย่าผัดวันประกันพรุ่ง</p>
+                    </div>
+
+                    <!-- Quadrant 2: Not Urgent but Important (SCHEDULE) -->
+                    <div class="border-2 border-green-300 rounded-xl p-6 bg-gradient-to-br from-green-50 to-emerald-50 min-h-[300px]">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-bold text-green-800">SCHEDULE (วางแผน)</h4>
+                                    <p class="text-xs text-green-600">ไม่เร่งด่วน + สำคัญ</p>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 bg-green-200 text-green-800 rounded-lg text-xs font-bold">Q2</span>
+                        </div>
+                        <textarea id="eisenhower-q2" class="w-full px-4 py-3 border border-green-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent min-h-[180px]" placeholder="ตัวอย่าง:&#10;- การวางแผนระยะยาว&#10;- พัฒนาทักษะและความสามารถ&#10;- สร้างความสัมพันธ์&#10;- การออกกำลังกายและสุขภาพ"></textarea>
+                        <p class="mt-2 text-xs text-green-600 font-semibold">📅 วางแผนทำ - นี่คือที่มาของความสำเร็จ</p>
+                    </div>
+
+                    <!-- Quadrant 3: Urgent but Not Important (DELEGATE) -->
+                    <div class="border-2 border-amber-300 rounded-xl p-6 bg-gradient-to-br from-amber-50 to-yellow-50 min-h-[300px]">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-amber-500 rounded-lg flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-bold text-amber-800">DELEGATE (มอบหมาย)</h4>
+                                    <p class="text-xs text-amber-600">เร่งด่วน + ไม่สำคัญ</p>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 bg-amber-200 text-amber-800 rounded-lg text-xs font-bold">Q3</span>
+                        </div>
+                        <textarea id="eisenhower-q3" class="w-full px-4 py-3 border border-amber-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent min-h-[180px]" placeholder="ตัวอย่าง:&#10;- การประชุมที่ไม่จำเป็น&#10;- อีเมลที่ไม่สำคัญ&#10;- งานรูทีนที่คนอื่นทำได้&#10;- การรบกวนจากคนอื่น"></textarea>
+                        <p class="mt-2 text-xs text-amber-600 font-semibold">👥 มอบหมายให้ผู้อื่น - อย่าเสียเวลา</p>
+                    </div>
+
+                    <!-- Quadrant 4: Not Urgent & Not Important (DELETE) -->
+                    <div class="border-2 border-slate-300 rounded-xl p-6 bg-gradient-to-br from-slate-50 to-gray-50 min-h-[300px]">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-slate-500 rounded-lg flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-bold text-slate-800">DELETE (ตัดทิ้ง)</h4>
+                                    <p class="text-xs text-slate-600">ไม่เร่งด่วน + ไม่สำคัญ</p>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 bg-slate-200 text-slate-800 rounded-lg text-xs font-bold">Q4</span>
+                        </div>
+                        <textarea id="eisenhower-q4" class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent min-h-[180px]" placeholder="ตัวอย่าง:&#10;- เล่นโซเชียลมีเดียมากเกินไป&#10;- ดูทีวีหรือซีรีส์เรื่อยเปื่อย&#10;- กิจกรรมที่เสียเวลา&#10;- งานที่ไม่ก่อให้เกิดคุณค่า"></textarea>
+                        <p class="mt-2 text-xs text-slate-600 font-semibold">🗑️ ลดหรือตัดทิ้ง - หยุดเสียเวลา</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-4">
+                    <button onclick="clearEisenhower()" class="flex-1 px-6 py-3 border-2 border-slate-300 text-slate-700 rounded-xl font-semibold hover:bg-slate-50 transition-all duration-300">
+                        Clear All
+                    </button>
+                    <button onclick="saveEisenhower()" class="flex-1 px-6 py-3 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-emerald-500/30 transition-all duration-300">
+                        Save Matrix
+                    </button>
+                </div>
+
+                <!-- Tips -->
+                <div class="mt-6 p-6 bg-gradient-to-br from-slate-50 to-blue-50 border-2 border-blue-200 rounded-xl">
+                    <h4 class="text-lg font-bold text-slate-800 mb-3">💡 เคล็ดลับการใช้งาน</h4>
+                    <ul class="text-sm text-slate-600 space-y-2 list-disc list-inside">
+                        <li><strong>Q1:</strong> พยายามลดงานในกล่องนี้ โดยวางแพลนล่วงหน้าให้ดี (ย้ายไป Q2)</li>
+                        <li><strong>Q2:</strong> ใช้เวลาให้มากที่สุด - นี่คือกล่องแห่งความสำเร็จ</li>
+                        <li><strong>Q3:</strong> เรียนรู้ที่จะปฏิเสธหรือมอบหมายงานเหล่านี้</li>
+                        <li><strong>Q4:</strong> ระวังไม่ให้ตกเป็นเหยื่อของกิจกรรมเสียเวลา</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Decision Matrix Section -->
+        <div id="section-decision" class="framework-section">
+            <div class="bg-white border border-slate-200 rounded-2xl p-8 shadow-sm">
+                <div class="flex items-start justify-between mb-6">
+                    <div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-2">Decision Matrix (Weighted Scoring)</h3>
+                        <p class="text-slate-600">ประเมินทางเลือกต่างๆ โดยใช้เกณฑ์ที่มีน้ำหนักความสำคัญ</p>
+                    </div>
+                    <span class="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-semibold text-sm">Intermediate</span>
+                </div>
+
+                <!-- Decision Context -->
+                <div class="mb-8 p-6 bg-gradient-to-br from-emerald-50 to-teal-50 border-2 border-emerald-200 rounded-xl">
+                    <label class="block text-lg font-bold text-emerald-800 mb-3">🎯 การตัดสินใจที่ต้องทำ (Decision to Make)</label>
+                    <input type="text" id="decision-context" class="w-full px-4 py-3 border border-emerald-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent text-lg font-semibold" placeholder="ตัวอย่าง: เลือกซอฟต์แวร์ CRM สำหรับบริษัท">
+                </div>
+
+                <!-- Options Input -->
+                <div class="mb-8">
+                    <h4 class="text-lg font-bold text-slate-800 mb-4">📋 ทางเลือกที่พิจารณา (Options)</h4>
+                    <div class="flex gap-3 mb-4">
+                        <input type="text" id="new-option" class="flex-1 px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400" placeholder="กรอกชื่อทางเลือก เช่น Salesforce, HubSpot">
+                        <button onclick="addOption()" class="px-6 py-3 bg-emerald-500 text-white rounded-lg font-semibold hover:bg-emerald-600 transition-all">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div id="options-list" class="space-y-2">
+                        <!-- Options will be added here -->
+                    </div>
+                </div>
+
+                <!-- Criteria Input -->
+                <div class="mb-8">
+                    <h4 class="text-lg font-bold text-slate-800 mb-4">⚖️ เกณฑ์การประเมิน (Criteria) พร้อมน้ำหนัก</h4>
+                    <div class="flex gap-3 mb-4">
+                        <input type="text" id="new-criteria" class="flex-1 px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400" placeholder="ชื่อเกณฑ์ เช่น ราคา, ความง่ายในการใช้งาน">
+                        <input type="number" id="new-weight" min="1" max="10" class="w-24 px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400" placeholder="1-10">
+                        <button onclick="addCriteria()" class="px-6 py-3 bg-emerald-500 text-white rounded-lg font-semibold hover:bg-emerald-600 transition-all">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <p class="text-xs text-slate-600 mb-4">💡 น้ำหนัก: 1 (น้อย) ถึง 10 (มาก) - แสดงความสำคัญของเกณฑ์นี้</p>
+                    <div id="criteria-list" class="space-y-2">
+                        <!-- Criteria will be added here -->
+                    </div>
+                </div>
+
+                <!-- Decision Matrix Table -->
+                <div class="mb-8 overflow-x-auto">
+                    <h4 class="text-lg font-bold text-slate-800 mb-4">📊 ตารางประเมินคะแนน</h4>
+                    <div id="decision-matrix-container">
+                        <p class="text-center text-slate-500 py-8">กรุณาเพิ่มทางเลือกและเกณฑ์การประเมินก่อน</p>
+                    </div>
+                </div>
+
+                <!-- Results -->
+                <div id="decision-results" class="hidden p-6 bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-xl">
+                    <h4 class="text-lg font-bold text-green-800 mb-4">🏆 ผลการประเมิน (Results)</h4>
+                    <div id="results-content"></div>
+                </div>
+
+                <div class="mt-8 flex gap-4">
+                    <button onclick="clearDecisionMatrix()" class="flex-1 px-6 py-3 border-2 border-slate-300 text-slate-700 rounded-xl font-semibold hover:bg-slate-50 transition-all duration-300">
+                        Clear All
+                    </button>
+                    <button onclick="calculateScores()" class="flex-1 px-6 py-3 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-emerald-500/30 transition-all duration-300">
+                        Calculate Results
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cost-Benefit Analysis Section -->
+        <div id="section-costbenefit" class="framework-section">
+            <div class="bg-white border border-slate-200 rounded-2xl p-8 shadow-sm">
+                <div class="flex items-start justify-between mb-6">
+                    <div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-2">Cost-Benefit Analysis</h3>
+                        <p class="text-slate-600">เปรียบเทียบต้นทุนและผลประโยชน์เพื่อหาความคุ้มค่าของการตัดสินใจ</p>
+                    </div>
+                    <span class="px-4 py-2 bg-green-100 text-green-700 rounded-lg font-semibold text-sm">Beginner Friendly</span>
+                </div>
+
+                <!-- Project/Decision Name -->
+                <div class="mb-8 p-6 bg-gradient-to-br from-emerald-50 to-teal-50 border-2 border-emerald-200 rounded-xl">
+                    <label class="block text-lg font-bold text-emerald-800 mb-3">🎯 โครงการ/การตัดสินใจ (Project/Decision)</label>
+                    <input type="text" id="cb-project" class="w-full px-4 py-3 border border-emerald-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent text-lg font-semibold" placeholder="ตัวอย่าง: การลงทุนระบบ ERP ใหม่">
+                </div>
+
+                <div class="grid grid-cols-2 gap-6 mb-8">
+                    <!-- Costs Section -->
+                    <div class="border-2 border-red-200 rounded-xl p-6 bg-gradient-to-br from-red-50 to-rose-50">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path>
+                                </svg>
+                            </div>
+                            <h4 class="text-lg font-bold text-red-800">💸 Costs (ต้นทุน)</h4>
+                        </div>
+                        
+                        <div class="space-y-3 mb-4">
+                            <div class="flex gap-2">
+                                <input type="text" id="new-cost-item" class="flex-1 px-3 py-2 border border-red-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-400" placeholder="รายการต้นทุน">
+                                <input type="number" id="new-cost-amount" class="w-32 px-3 py-2 border border-red-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-400" placeholder="จำนวน (฿)">
+                                <button onclick="addCost()" class="px-4 py-2 bg-red-500 text-white rounded-lg text-sm font-semibold hover:bg-red-600">+</button>
+                            </div>
+                        </div>
+
+                        <div id="costs-list" class="space-y-2 mb-4">
+                            <!-- Cost items will be added here -->
+                        </div>
+
+                        <div class="pt-4 border-t-2 border-red-300">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-red-800">รวมต้นทุน:</span>
+                                <span id="total-costs" class="text-2xl font-bold text-red-600">฿0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Benefits Section -->
+                    <div class="border-2 border-green-200 rounded-xl p-6 bg-gradient-to-br from-green-50 to-emerald-50">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                                </svg>
+                            </div>
+                            <h4 class="text-lg font-bold text-green-800">💰 Benefits (ผลประโยชน์)</h4>
+                        </div>
+                        
+                        <div class="space-y-3 mb-4">
+                            <div class="flex gap-2">
+                                <input type="text" id="new-benefit-item" class="flex-1 px-3 py-2 border border-green-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-400" placeholder="รายการผลประโยชน์">
+                                <input type="number" id="new-benefit-amount" class="w-32 px-3 py-2 border border-green-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-400" placeholder="จำนวน (฿)">
+                                <button onclick="addBenefit()" class="px-4 py-2 bg-green-500 text-white rounded-lg text-sm font-semibold hover:bg-green-600">+</button>
+                            </div>
+                        </div>
+
+                        <div id="benefits-list" class="space-y-2 mb-4">
+                            <!-- Benefit items will be added here -->
+                        </div>
+
+                        <div class="pt-4 border-t-2 border-green-300">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-green-800">รวมผลประโยชน์:</span>
+                                <span id="total-benefits" class="text-2xl font-bold text-green-600">฿0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analysis Results -->
+                <div class="space-y-4 mb-8">
+                    <!-- Net Benefit -->
+                    <div class="p-6 bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h4 class="text-lg font-bold text-blue-800 mb-1">📈 Net Benefit (ผลประโยชน์สุทธิ)</h4>
+                                <p class="text-sm text-blue-600">ผลประโยชน์ - ต้นทุน</p>
+                            </div>
+                            <span id="net-benefit" class="text-3xl font-bold text-blue-600">฿0</span>
+                        </div>
+                    </div>
+
+                    <!-- Benefit-Cost Ratio -->
+                    <div class="p-6 bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-200 rounded-xl">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h4 class="text-lg font-bold text-purple-800 mb-1">⚖️ Benefit-Cost Ratio (BCR)</h4>
+                                <p class="text-sm text-purple-600">ผลประโยชน์ ÷ ต้นทุน</p>
+                            </div>
+                            <span id="bcr" class="text-3xl font-bold text-purple-600">0.00</span>
+                        </div>
+                    </div>
+
+                    <!-- Recommendation -->
+                    <div id="cb-recommendation" class="p-6 rounded-xl border-2">
+                        <h4 class="text-lg font-bold mb-2">💡 คำแนะนำ</h4>
+                        <p id="cb-recommendation-text" class="text-sm"></p>
+                    </div>
+                </div>
+
+                <!-- ROI Calculator (Optional) -->
+                <div class="p-6 bg-gradient-to-br from-slate-50 to-gray-50 border-2 border-slate-200 rounded-xl mb-8">
+                    <h4 class="text-lg font-bold text-slate-800 mb-4">📊 Return on Investment (ROI)</h4>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">ระยะเวลาคาดการณ์ (ปี)</label>
+                            <input type="number" id="roi-years" min="1" value="1" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-400" onchange="calculateCostBenefit()">
+                        </div>
+                        <div class="flex items-end">
+                            <div class="w-full">
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">ROI (%)</label>
+                                <div id="roi-percentage" class="text-2xl font-bold text-emerald-600">0.00%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-4">
+                    <button onclick="clearCostBenefit()" class="flex-1 px-6 py-3 border-2 border-slate-300 text-slate-700 rounded-xl font-semibold hover:bg-slate-50 transition-all duration-300">
+                        Clear All
+                    </button>
+                    <button onclick="saveCostBenefit()" class="flex-1 px-6 py-3 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-emerald-500/30 transition-all duration-300">
+                        Save Analysis
+                    </button>
+                </div>
+
+                <!-- Tips -->
+                <div class="mt-6 p-6 bg-gradient-to-br from-slate-50 to-blue-50 border-2 border-blue-200 rounded-xl">
+                    <h4 class="text-lg font-bold text-slate-800 mb-3">💡 การตีความผล</h4>
+                    <ul class="text-sm text-slate-600 space-y-2 list-disc list-inside">
+                        <li><strong>BCR > 1:</strong> ผลประโยชน์มากกว่าต้นทุน → ควรดำเนินการ</li>
+                        <li><strong>BCR = 1:</strong> ผลประโยชน์เท่ากับต้นทุน → พิจารณาปัจจัยอื่น</li>
+                        <li><strong>BCR < 1:</strong> ต้นทุนมากกว่าผลประโยชน์ → ไม่ควรดำเนินการ</li>
+                        <li><strong>ROI:</strong> ยิ่งสูงยิ่งดี - แสดงผลตอบแทนจากการลงทุน</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Global variables for Decision Matrix
+        let options = [];
+        let criteria = [];
+        let scores = {};
+
+        // Global variables for Cost-Benefit
+        let costs = [];
+        let benefits = [];
+
+        // Framework Switching
+        function switchFramework(framework) {
+            document.querySelectorAll('.framework-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.framework-tab').forEach(tab => {
+                tab.classList.remove('active');
+                tab.classList.add('bg-slate-100', 'text-slate-700', 'hover:bg-slate-200');
+            });
+            
+            document.getElementById(`section-${framework}`).classList.add('active');
+            
+            const activeTab = document.getElementById(`tab-${framework}`);
+            activeTab.classList.add('active');
+            activeTab.classList.remove('bg-slate-100', 'text-slate-700', 'hover:bg-slate-200');
+        }
+
+        // Eisenhower Matrix Functions
+        function clearEisenhower() {
+            if (confirm('คุณต้องการล้างข้อมูล Eisenhower Matrix ทั้งหมดหรือไม่?')) {
+                document.getElementById('eisenhower-q1').value = '';
+                document.getElementById('eisenhower-q2').value = '';
+                document.getElementById('eisenhower-q3').value = '';
+                document.getElementById('eisenhower-q4').value = '';
+            }
+        }
+
+        function saveEisenhower() {
+            const data = {
+                q1: document.getElementById('eisenhower-q1').value,
+                q2: document.getElementById('eisenhower-q2').value,
+                q3: document.getElementById('eisenhower-q3').value,
+                q4: document.getElementById('eisenhower-q4').value,
+                timestamp: new Date().toISOString()
+            };
+            
+            localStorage.setItem('eisenhower-matrix', JSON.stringify(data));
+            alert('✅ บันทึก Eisenhower Matrix สำเร็จ!');
+        }
+
+        // Decision Matrix Functions
+        function addOption() {
+            const input = document.getElementById('new-option');
+            const optionName = input.value.trim();
+            
+            if (optionName) {
+                options.push(optionName);
+                renderOptions();
+                renderMatrix();
+                input.value = '';
+            }
+        }
+
+        function addCriteria() {
+            const nameInput = document.getElementById('new-criteria');
+            const weightInput = document.getElementById('new-weight');
+            
+            const criteriaName = nameInput.value.trim();
+            const weight = parseInt(weightInput.value);
+            
+            if (criteriaName && weight >= 1 && weight <= 10) {
+                criteria.push({ name: criteriaName, weight: weight });
+                renderCriteria();
+                renderMatrix();
+                nameInput.value = '';
+                weightInput.value = '';
+            }
+        }
+
+        function renderOptions() {
+            const container = document.getElementById('options-list');
+            container.innerHTML = options.map((opt, idx) => `
+                <div class="flex items-center justify-between p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                    <span class="font-semibold text-blue-800">${idx + 1}. ${opt}</span>
+                    <button onclick="removeOption(${idx})" class="text-red-500 hover:text-red-700">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function renderCriteria() {
+            const container = document.getElementById('criteria-list');
+            container.innerHTML = criteria.map((crit, idx) => `
+                <div class="flex items-center justify-between p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
+                    <div class="flex items-center gap-3">
+                        <span class="font-semibold text-emerald-800">${crit.name}</span>
+                        <span class="px-2 py-1 bg-emerald-200 text-emerald-800 rounded text-xs font-bold">น้ำหนัก: ${crit.weight}</span>
+                    </div>
+                    <button onclick="removeCriteria(${idx})" class="text-red-500 hover:text-red-700">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function renderMatrix() {
+            if (options.length === 0 || criteria.length === 0) {
+                document.getElementById('decision-matrix-container').innerHTML = 
+                    '<p class="text-center text-slate-500 py-8">กรุณาเพิ่มทางเลือกและเกณฑ์การประเมินก่อน</p>';
+                return;
+            }
+
+            let html = '<table class="w-full border-collapse"><thead><tr class="bg-slate-100"><th class="border border-slate-300 p-3 text-left">เกณฑ์</th>';
+            
+            options.forEach(opt => {
+                html += `<th class="border border-slate-300 p-3 text-center">${opt}</th>`;
+            });
+            html += '</tr></thead><tbody>';
+
+            criteria.forEach((crit, critIdx) => {
+                html += `<tr class="criteria-row"><td class="border border-slate-300 p-3 font-semibold">${crit.name} <span class="text-xs text-slate-500">(น้ำหนัก: ${crit.weight})</span></td>`;
+                
+                options.forEach((opt, optIdx) => {
+                    const key = `${optIdx}-${critIdx}`;
+                    const value = scores[key] || '';
+                    html += `<td class="border border-slate-300 p-2">
+                        <input type="number" min="1" max="10" value="${value}" 
+                               onchange="updateScore(${optIdx}, ${critIdx}, this.value)"
+                               class="w-full px-2 py-1 border border-slate-300 rounded text-center focus:outline-none focus:ring-2 focus:ring-emerald-400"
+                               placeholder="1-10">
+                    </td>`;
+                });
+                html += '</tr>';
+            });
+
+            html += '</tbody></table>';
+            html += '<p class="text-xs text-slate-600 mt-2">💡 คะแนน: 1 (ต่ำ) ถึง 10 (สูง)</p>';
+            
+            document.getElementById('decision-matrix-container').innerHTML = html;
+        }
+
+        function updateScore(optIdx, critIdx, value) {
+            const key = `${optIdx}-${critIdx}`;
+            scores[key] = parseInt(value) || 0;
+        }
+
+        function calculateScores() {
+            const results = options.map((opt, optIdx) => {
+                let totalScore = 0;
+                criteria.forEach((crit, critIdx) => {
+                    const key = `${optIdx}-${critIdx}`;
+                    const score = scores[key] || 0;
+                    totalScore += score * crit.weight;
+                });
+                return { name: opt, score: totalScore };
+            });
+
+            results.sort((a, b) => b.score - a.score);
+
+            let html = '<div class="space-y-3">';
+            results.forEach((result, idx) => {
+                const color = idx === 0 ? 'green' : idx === 1 ? 'blue' : 'slate';
+                html += `
+                    <div class="flex items-center justify-between p-4 bg-${color}-50 border-2 border-${color}-200 rounded-lg">
+                        <div class="flex items-center gap-3">
+                            <span class="w-8 h-8 bg-${color}-500 text-white rounded-full flex items-center justify-center font-bold">${idx + 1}</span>
+                            <span class="font-bold text-${color}-800 text-lg">${result.name}</span>
+                        </div>
+                        <span class="text-2xl font-bold text-${color}-600">${result.score} คะแนน</span>
+                    </div>
+                `;
+            });
+            html += '</div>';
+
+            document.getElementById('results-content').innerHTML = html;
+            document.getElementById('decision-results').classList.remove('hidden');
+        }
+
+        function removeOption(idx) {
+            options.splice(idx, 1);
+            renderOptions();
+            renderMatrix();
+        }
+
+        function removeCriteria(idx) {
+            criteria.splice(idx, 1);
+            renderCriteria();
+            renderMatrix();
+        }
+
+        function clearDecisionMatrix() {
+            if (confirm('คุณต้องการล้างข้อมูล Decision Matrix ทั้งหมดหรือไม่?')) {
+                document.getElementById('decision-context').value = '';
+                options = [];
+                criteria = [];
+                scores = {};
+                renderOptions();
+                renderCriteria();
+                renderMatrix();
+                document.getElementById('decision-results').classList.add('hidden');
+            }
+        }
+
+        // Cost-Benefit Functions
+        function addCost() {
+            const itemInput = document.getElementById('new-cost-item');
+            const amountInput = document.getElementById('new-cost-amount');
+            
+            const item = itemInput.value.trim();
+            const amount = parseFloat(amountInput.value) || 0;
+            
+            if (item && amount > 0) {
+                costs.push({ item, amount });
+                renderCosts();
+                calculateCostBenefit();
+                itemInput.value = '';
+                amountInput.value = '';
+            }
+        }
+
+        function addBenefit() {
+            const itemInput = document.getElementById('new-benefit-item');
+            const amountInput = document.getElementById('new-benefit-amount');
+            
+            const item = itemInput.value.trim();
+            const amount = parseFloat(amountInput.value) || 0;
+            
+            if (item && amount > 0) {
+                benefits.push({ item, amount });
+                renderBenefits();
+                calculateCostBenefit();
+                itemInput.value = '';
+                amountInput.value = '';
+            }
+        }
+
+        function renderCosts() {
+            const container = document.getElementById('costs-list');
+            container.innerHTML = costs.map((cost, idx) => `
+                <div class="flex items-center justify-between p-2 bg-white border border-red-100 rounded-lg">
+                    <span class="text-sm text-slate-700">${cost.item}</span>
+                    <div class="flex items-center gap-2">
+                        <span class="font-semibold text-red-600">฿${cost.amount.toLocaleString()}</span>
+                        <button onclick="removeCost(${idx})" class="text-red-500 hover:text-red-700">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderBenefits() {
+            const container = document.getElementById('benefits-list');
+            container.innerHTML = benefits.map((benefit, idx) => `
+                <div class="flex items-center justify-between p-2 bg-white border border-green-100 rounded-lg">
+                    <span class="text-sm text-slate-700">${benefit.item}</span>
+                    <div class="flex items-center gap-2">
+                        <span class="font-semibold text-green-600">฿${benefit.amount.toLocaleString()}</span>
+                        <button onclick="removeBenefit(${idx})" class="text-red-500 hover:text-red-700">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function removeCost(idx) {
+            costs.splice(idx, 1);
+            renderCosts();
+            calculateCostBenefit();
+        }
+
+        function removeBenefit(idx) {
+            benefits.splice(idx, 1);
+            renderBenefits();
+            calculateCostBenefit();
+        }
+
+        function calculateCostBenefit() {
+            const totalCosts = costs.reduce((sum, cost) => sum + cost.amount, 0);
+            const totalBenefits = benefits.reduce((sum, benefit) => sum + benefit.amount, 0);
+            const netBenefit = totalBenefits - totalCosts;
+            const bcr = totalCosts > 0 ? totalBenefits / totalCosts : 0;
+            
+            const years = parseFloat(document.getElementById('roi-years').value) || 1;
+            const roi = totalCosts > 0 ? ((netBenefit / totalCosts) * 100) / years : 0;
+
+            document.getElementById('total-costs').textContent = `฿${totalCosts.toLocaleString()}`;
+            document.getElementById('total-benefits').textContent = `฿${totalBenefits.toLocaleString()}`;
+            document.getElementById('net-benefit').textContent = `฿${netBenefit.toLocaleString()}`;
+            document.getElementById('bcr').textContent = bcr.toFixed(2);
+            document.getElementById('roi-percentage').textContent = `${roi.toFixed(2)}%`;
+
+            // Recommendation
+            const recBox = document.getElementById('cb-recommendation');
+            const recText = document.getElementById('cb-recommendation-text');
+            
+            if (bcr > 1.5) {
+                recBox.className = 'p-6 rounded-xl border-2 bg-green-50 border-green-300';
+                recText.className = 'text-sm text-green-800';
+                recText.textContent = '✅ แนะนำอย่างยิ่งให้ดำเนินการ - ผลประโยชน์สูงกว่าต้นทุนอย่างมีนัยสำคัญ';
+            } else if (bcr > 1) {
+                recBox.className = 'p-6 rounded-xl border-2 bg-blue-50 border-blue-300';
+                recText.className = 'text-sm text-blue-800';
+                recText.textContent = '👍 ควรดำเนินการ - ผลประโยชน์มากกว่าต้นทุน แต่ควรพิจารณาปัจจัยอื่นประกอบ';
+            } else if (bcr === 1) {
+                recBox.className = 'p-6 rounded-xl border-2 bg-amber-50 border-amber-300';
+                recText.className = 'text-sm text-amber-800';
+                recText.textContent = '⚠️ ต้องพิจารณาอย่างรอบคอบ - ผลประโยชน์เท่ากับต้นทุน พิจารณาปัจจัยอื่นๆ เช่น ความเสี่ยง';
+            } else {
+                recBox.className = 'p-6 rounded-xl border-2 bg-red-50 border-red-300';
+                recText.className = 'text-sm text-red-800';
+                recText.textContent = '❌ ไม่แนะนำให้ดำเนินการ - ต้นทุนสูงกว่าผลประโยชน์';
+            }
+        }
+
+        function clearCostBenefit() {
+            if (confirm('คุณต้องการล้างข้อมูล Cost-Benefit Analysis ทั้งหมดหรือไม่?')) {
+                document.getElementById('cb-project').value = '';
+                costs = [];
+                benefits = [];
+                renderCosts();
+                renderBenefits();
+                calculateCostBenefit();
+            }
+        }
+
+        function saveCostBenefit() {
+            const data = {
+                project: document.getElementById('cb-project').value,
+                costs,
+                benefits,
+                timestamp: new Date().toISOString()
+            };
+            
+            localStorage.setItem('costbenefit-analysis', JSON.stringify(data));
+            alert('✅ บันทึก Cost-Benefit Analysis สำเร็จ!');
+        }
+
+        // Export All Analysis
+        function exportAnalysis() {
+            const allData = {
+                eisenhower: JSON.parse(localStorage.getItem('eisenhower-matrix') || '{}'),
+                decision: { context: document.getElementById('decision-context')?.value, options, criteria, scores },
+                costbenefit: JSON.parse(localStorage.getItem('costbenefit-analysis') || '{}'),
+                exportDate: new Date().toISOString()
+            };
+
+            const dataStr = JSON.stringify(allData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `decision-prioritization-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Load saved data on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            // Load Eisenhower data
+            const eisData = JSON.parse(localStorage.getItem('eisenhower-matrix') || '{}');
+            if (eisData.q1) document.getElementById('eisenhower-q1').value = eisData.q1;
+            if (eisData.q2) document.getElementById('eisenhower-q2').value = eisData.q2;
+            if (eisData.q3) document.getElementById('eisenhower-q3').value = eisData.q3;
+            if (eisData.q4) document.getElementById('eisenhower-q4').value = eisData.q4;
+
+            // Load Cost-Benefit data
+            const cbData = JSON.parse(localStorage.getItem('costbenefit-analysis') || '{}');
+            if (cbData.project) document.getElementById('cb-project').value = cbData.project;
+            if (cbData.costs) {
+                costs = cbData.costs;
+                renderCosts();
+            }
+            if (cbData.benefits) {
+                benefits = cbData.benefits;
+                renderBenefits();
+            }
+            calculateCostBenefit();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Problem Solving - Business Data Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-slide-up {
+            animation: slideUp 0.6s ease-out forwards;
+        }
+
+        .animate-delay-100 {
+            animation-delay: 100ms;
+        }
+
+        .animate-delay-200 {
+            animation-delay: 200ms;
+        }
+
+        .animate-delay-300 {
+            animation-delay: 300ms;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-item.active {
+            background: rgb(219 234 254);
+            color: rgb(29 78 216);
+            font-weight: 600;
+        }
+
+        .nav-item:not(.active) {
+            color: rgb(71 85 105);
+        }
+
+        .nav-item:not(.active):hover {
+            color: rgb(30 41 59);
+            background: rgb(241 245 249);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(to bottom right, rgb(239 246 255), rgb(238 242 255), rgb(250 245 255));
+        }
+
+        .card {
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        .framework-tab {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .framework-tab.active {
+            background: linear-gradient(to right, rgb(139 92 246), rgb(167 139 250));
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(139, 92, 246, 0.3);
+        }
+
+        .framework-section {
+            display: none;
+            opacity: 0;
+            animation: slideUp 0.5s ease-out forwards;
+        }
+
+        .framework-section.active {
+            display: block;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .fishbone-line {
+            position: relative;
+        }
+
+        .fishbone-line::before {
+            content: '';
+            position: absolute;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, rgb(139 92 246), transparent);
+            left: -20px;
+            top: 0;
+        }
+
+        .why-counter {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 1.25rem;
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <!-- Top Navigation -->
+    <nav class="border-b border-white/60 bg-white/80 backdrop-blur-xl sticky top-0 z-50 shadow-sm">
+        <div class="max-w-[1800px] mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <div onclick="window.location.href='index.html'" class="flex items-center gap-3 cursor-pointer group">
+                    <div class="w-10 h-10 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-xl flex items-center justify-center shadow-md transition-transform duration-300 group-hover:rotate-6">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                            Strategic Platform
+                        </h1>
+                        <p class="text-xs text-slate-500">Business Data Analysis</p>
+                    </div>
+                </div>
+
+                <!-- Main Navigation -->
+                <div class="flex items-center gap-8">
+                    <button onclick="window.location.href='index.html'" class="nav-item flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                        <span class="text-sm">Dashboard</span>
+                    </button>
+                    <button class="nav-item flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        <span class="text-sm">Projects</span>
+                    </button>
+                    <button class="nav-item active flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                        <span class="text-sm">Problem Solving</span>
+                    </button>
+                    <button class="nav-item flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span class="text-sm">Settings</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-[1800px] mx-auto px-6 py-8">
+        <!-- Header Section -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-3xl font-bold text-slate-800 mb-2">Problem Solving Frameworks</h2>
+                    <p class="text-slate-600">เลือกเครื่องมือวิเคราะห์ปัญหาที่เหมาะสมกับสถานการณ์</p>
+                </div>
+                <button onclick="exportAnalysis()" class="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-violet-500 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/30 transition-all duration-300">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                    </svg>
+                    Export Analysis
+                </button>
+            </div>
+        </div>
+
+        <!-- Framework Tabs -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-2 mb-8 shadow-sm">
+            <div class="grid grid-cols-3 gap-2">
+                <button onclick="switchFramework('fishbone')" id="tab-fishbone" class="framework-tab active px-6 py-4 rounded-xl font-semibold flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path>
+                    </svg>
+                    Fishbone Diagram
+                </button>
+                <button onclick="switchFramework('whys')" id="tab-whys" class="framework-tab px-6 py-4 rounded-xl font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    5 Whys Analysis
+                </button>
+                <button onclick="switchFramework('principles')" id="tab-principles" class="framework-tab px-6 py-4 rounded-xl font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                    </svg>
+                    First Principles
+                </button>
+            </div>
+        </div>
+
+        <!-- Fishbone Diagram Section -->
+        <div id="section-fishbone" class="framework-section active">
+            <div class="bg-white border border-slate-200 rounded-2xl p-8 shadow-sm">
+                <div class="flex items-start justify-between mb-6">
+                    <div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-2">Fishbone Diagram (Ishikawa)</h3>
+                        <p class="text-slate-600">วิเคราะห์สาเหตุของปัญหาจาก 6 หมวดหมู่หลัก: Man, Machine, Material, Method, Measurement, Environment</p>
+                    </div>
+                    <span class="px-4 py-2 bg-green-100 text-green-700 rounded-lg font-semibold text-sm">Beginner Friendly</span>
+                </div>
+
+                <!-- Problem Statement -->
+                <div class="mb-8 p-6 bg-gradient-to-br from-violet-50 to-purple-50 border-2 border-violet-200 rounded-xl">
+                    <label class="block text-lg font-bold text-violet-800 mb-3">🎯 ปัญหาที่ต้องการแก้ไข (Problem Statement)</label>
+                    <input type="text" id="fishbone-problem" class="w-full px-4 py-3 border border-violet-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-400 focus:border-transparent text-lg font-semibold" placeholder="ตัวอย่าง: ยอดขายลดลง 30% ในไตรมาสที่ผ่านมา">
+                    <p class="mt-2 text-sm text-violet-600">💡 เขียนปัญหาให้ชัดเจนและวัดผลได้</p>
+                </div>
+
+                <!-- 6 Categories -->
+                <div class="grid grid-cols-2 gap-6">
+                    <!-- Man (People) -->
+                    <div class="border-2 border-blue-200 rounded-xl p-6 bg-gradient-to-br from-blue-50 to-cyan-50 fishbone-line">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
+                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-blue-800">Man (People)</h4>
+                                <p class="text-xs text-blue-600">ปัจจัยด้านบุคลากร</p>
+                            </div>
+                        </div>
+                        <textarea id="fishbone-man" class="w-full px-4 py-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent" placeholder="ตัวอย่าง:&#10;- ขาดทักษะในการขาย&#10;- พนักงานใหม่ยังไม่มีประสบการณ์&#10;- แรงจูงใจในการทำงานลดลง&#10;- การฝึกอบรมไม่เพียงพอ"></textarea>
+                    </div>
+
+                    <!-- Machine -->
+                    <div class="border-2 border-purple-200 rounded-xl p-6 bg-gradient-to-br from-purple-50 to-pink-50 fishbone-line">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center">
+                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-purple-800">Machine (Equipment)</h4>
+                                <p class="text-xs text-purple-600">ปัจจัยด้านเครื่องมือ/อุปกรณ์</p>
+                            </div>
+                        </div>
+                        <textarea id="fishbone-machine" class="w-full px-4 py-3 border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent" placeholder="ตัวอย่าง:&#10;- ระบบ CRM ล้าสมัย&#10;- เครื่องมือวิเคราะห์ข้อมูลไม่มี&#10;- เว็บไซต์โหลดช้า&#10;- แอปพลิเคชันมีบั๊ก"></textarea>
+                    </div>
+
+                    <!-- Material -->
+                    <div class="border-2 border-green-200 rounded-xl p-6 bg-gradient-to-br from-green-50 to-emerald-50 fishbone-line">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
+                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-green-800">Material (Resources)</h4>
+                                <p class="text-xs text-green-600">ปัจจัยด้านวัตถุดิบ/ทรัพยากร</p>
+                            </div>
+                        </div>
+                        <textarea id="fishbone-material" class="w-full px-4 py-3 border border-green-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent" placeholder="ตัวอย่าง:&#10;- สินค้าไม่ครบตามที่สั่ง&#10;- คุณภาพสินค้าไม่สม่ำเสมอ&#10;- ขาดแคลนสินค้าบางรุ่น&#10;- ต้นทุนวัตถุดิบสูงขึ้น"></textarea>
+                    </div>
+
+                    <!-- Method -->
+                    <div class="border-2 border-amber-200 rounded-xl p-6 bg-gradient-to-br from-amber-50 to-yellow-50 fishbone-line">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-12 h-12 bg-amber-500 rounded-lg flex items-center justify-center">
+                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-amber-800">Method (Process)</h4>
+                                <p class="text-xs text-amber-600">ปัจจัยด้านกระบวนการ/วิธีการ</p>
+                            </div>
+                        </div>
+                        <textarea id="fishbone-method" class="w-full px-4 py-3 border border-amber-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent" placeholder="ตัวอย่าง:&#10;- กระบวนการขายซับซ้อนเกินไป&#10;- ไม่มีขั้นตอนการติดตามลูกค้า&#10;- วิธีการตลาดไม่เหมาะสม&#10;- ไม่มีมาตรฐานในการทำงาน"></textarea>
+                    </div>
+
+                    <!-- Measurement -->
+                    <div class="border-2 border-red-200 rounded-xl p-6 bg-gradient-to-br from-red-50 to-rose-50 fishbone-line">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center">
+                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-red-800">Measurement (Metrics)</h4>
+                                <p class="text-xs text-red-600">ปัจจัยด้านการวัดผล</p>
+                            </div>
+                        </div>
+                        <textarea id="fishbone-measurement" class="w-full px-4 py-3 border border-red-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent" placeholder="ตัวอย่าง:&#10;- ไม่มีการติดตามผลอย่างสม่ำเสมอ&#10;- ข้อมูลไม่ถูกต้อง/ไม่ครบถ้วน&#10;- ไม่มี KPI ที่ชัดเจน&#10;- รายงานไม่ตรงตามความเป็นจริง"></textarea>
+                    </div>
+
+                    <!-- Environment -->
+                    <div class="border-2 border-indigo-200 rounded-xl p-6 bg-gradient-to-br from-indigo-50 to-blue-50 fishbone-line">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-12 h-12 bg-indigo-500 rounded-lg flex items-center justify-center">
+                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-indigo-800">Environment</h4>
+                                <p class="text-xs text-indigo-600">ปัจจัยด้านสภาพแวดล้อม</p>
+                            </div>
+                        </div>
+                        <textarea id="fishbone-environment" class="w-full px-4 py-3 border border-indigo-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent" placeholder="ตัวอย่าง:&#10;- ภาวะเศรษฐกิจตกต่ำ&#10;- คู่แข่งเพิ่มขึ้น&#10;- กฎระเบียบใหม่ที่เข้มงวด&#10;- พฤติกรรมผู้บริโภคเปลี่ยนแปลง"></textarea>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex gap-4">
+                    <button onclick="clearFishbone()" class="flex-1 px-6 py-3 border-2 border-slate-300 text-slate-700 rounded-xl font-semibold hover:bg-slate-50 transition-all duration-300">
+                        Clear All
+                    </button>
+                    <button onclick="saveFishbone()" class="flex-1 px-6 py-3 bg-gradient-to-r from-violet-500 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/30 transition-all duration-300">
+                        Save Analysis
+                    </button>
+                </div>
+
+                <!-- Next Steps -->
+                <div class="mt-6 p-6 bg-gradient-to-br from-slate-50 to-violet-50 border-2 border-violet-200 rounded-xl">
+                    <h4 class="text-lg font-bold text-slate-800 mb-3">📋 ขั้นตอนต่อไป</h4>
+                    <ol class="text-sm text-slate-600 space-y-2 list-decimal list-inside">
+                        <li>ระดมสมองหาสาเหตุในแต่ละหมวดหมู่</li>
+                        <li>จัดลำดับความสำคัญของสาเหตุ</li>
+                        <li>ใช้ 5 Whys เพื่อขุดลึกหาสาเหตุหลัก</li>
+                        <li>วางแผนแก้ไขปัญหาตามสาเหตุที่สำคัญที่สุด</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5 Whys Section -->
+        <div id="section-whys" class="framework-section">
+            <div class="bg-white border border-slate-200 rounded-2xl p-8 shadow-sm">
+                <div class="flex items-start justify-between mb-6">
+                    <div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-2">5 Whys Analysis</h3>
+                        <p class="text-slate-600">ถามคำถาม "ทำไม" 5 ครั้ง เพื่อค้นหาสาเหตุรากเหง้าของปัญหา</p>
+                    </div>
+                    <span class="px-4 py-2 bg-green-100 text-green-700 rounded-lg font-semibold text-sm">Beginner Friendly</span>
+                </div>
+
+                <!-- Problem Statement -->
+                <div class="mb-8 p-6 bg-gradient-to-br from-violet-50 to-purple-50 border-2 border-violet-200 rounded-xl">
+                    <label class="block text-lg font-bold text-violet-800 mb-3">🎯 ปัญหาเริ่มต้น (Initial Problem)</label>
+                    <input type="text" id="whys-problem" class="w-full px-4 py-3 border border-violet-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-400 focus:border-transparent text-lg font-semibold" placeholder="ตัวอย่าง: ลูกค้าไม่พอใจและยกเลิกคำสั่งซื้อ">
+                    <p class="mt-2 text-sm text-violet-600">💡 เริ่มจากอาการที่เห็นได้ชัดเจน</p>
+                </div>
+
+                <!-- 5 Whys Chain -->
+                <div class="space-y-6">
+                    <!-- Why 1 -->
+                    <div class="relative pl-20">
+                        <div class="absolute left-0 top-1/2 transform -translate-y-1/2 why-counter bg-gradient-to-br from-violet-500 to-purple-600 text-white shadow-lg">
+                            1
+                        </div>
+                        <div class="border-2 border-violet-200 rounded-xl p-6 bg-gradient-to-br from-violet-50 to-purple-50">
+                            <label class="block text-sm font-bold text-violet-800 mb-2">ทำไม? (Why #1)</label>
+                            <textarea id="why-1" class="w-full px-4 py-3 border border-violet-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-400 focus:border-transparent" placeholder="ตัวอย่าง: เพราะสินค้าส่งช้า"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Why 2 -->
+                    <div class="relative pl-20">
+                        <div class="absolute left-0 top-1/2 transform -translate-y-1/2 why-counter bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg">
+                            2
+                        </div>
+                        <div class="border-2 border-blue-200 rounded-xl p-6 bg-gradient-to-br from-blue-50 to-indigo-50">
+                            <label class="block text-sm font-bold text-blue-800 mb-2">ทำไม? (Why #2)</label>
+                            <textarea id="why-2" class="w-full px-4 py-3 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent" placeholder="ตัวอย่าง: เพราะระบบจัดส่งล่าช้า"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Why 3 -->
+                    <div class="relative pl-20">
+                        <div class="absolute left-0 top-1/2 transform -translate-y-1/2 why-counter bg-gradient-to-br from-green-500 to-emerald-600 text-white shadow-lg">
+                            3
+                        </div>
+                        <div class="border-2 border-green-200 rounded-xl p-6 bg-gradient-to-br from-green-50 to-emerald-50">
+                            <label class="block text-sm font-bold text-green-800 mb-2">ทำไม? (Why #3)</label>
+                            <textarea id="why-3" class="w-full px-4 py-3 border border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent" placeholder="ตัวอย่าง: เพราะไม่มีพนักงานจัดส่งเพียงพอ"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Why 4 -->
+                    <div class="relative pl-20">
+                        <div class="absolute left-0 top-1/2 transform -translate-y-1/2 why-counter bg-gradient-to-br from-amber-500 to-orange-600 text-white shadow-lg">
+                            4
+                        </div>
+                        <div class="border-2 border-amber-200 rounded-xl p-6 bg-gradient-to-br from-amber-50 to-yellow-50">
+                            <label class="block text-sm font-bold text-amber-800 mb-2">ทำไม? (Why #4)</label>
+                            <textarea id="why-4" class="w-full px-4 py-3 border border-amber-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent" placeholder="ตัวอย่าง: เพราะไม่มีการวางแพลนกำลังคน"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Why 5 -->
+                    <div class="relative pl-20">
+                        <div class="absolute left-0 top-1/2 transform -translate-y-1/2 why-counter bg-gradient-to-br from-red-500 to-rose-600 text-white shadow-lg">
+                            5
+                        </div>
+                        <div class="border-2 border-red-200 rounded-xl p-6 bg-gradient-to-br from-red-50 to-rose-50">
+                            <label class="block text-sm font-bold text-red-800 mb-2">ทำไม? (Why #5) - สาเหตุรากเหง้า</label>
+                            <textarea id="why-5" class="w-full px-4 py-3 border border-red-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent" placeholder="ตัวอย่าง: เพราะไม่มีระบบพยากรณ์ความต้องการ"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Root Cause Summary -->
+                <div class="mt-8 p-6 bg-gradient-to-br from-red-50 to-rose-50 border-2 border-red-200 rounded-xl">
+                    <label class="block text-lg font-bold text-red-800 mb-3">🎯 สาเหตุรากเหง้า (Root Cause)</label>
+                    <textarea id="whys-root-cause" class="w-full px-4 py-3 border border-red-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent" placeholder="สรุปสาเหตุรากเหง้าที่แท้จริงของปัญหา"></textarea>
+                </div>
+
+                <!-- Action Plan -->
+                <div class="mt-6 p-6 bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-xl">
+                    <label class="block text-lg font-bold text-green-800 mb-3">✅ แผนการแก้ไข (Action Plan)</label>
+                    <textarea id="whys-action" class="w-full px-4 py-3 border border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent" placeholder="วางแผนการแก้ไขปัญหาที่สาเหตุรากเหง้า"></textarea>
+                </div>
+
+                <div class="mt-8 flex gap-4">
+                    <button onclick="clearWhys()" class="flex-1 px-6 py-3 border-2 border-slate-300 text-slate-700 rounded-xl font-semibold hover:bg-slate-50 transition-all duration-300">
+                        Clear All
+                    </button>
+                    <button onclick="saveWhys()" class="flex-1 px-6 py-3 bg-gradient-to-r from-violet-500 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/30 transition-all duration-300">
+                        Save Analysis
+                    </button>
+                </div>
+
+                <!-- Tips -->
+                <div class="mt-6 p-6 bg-gradient-to-br from-slate-50 to-blue-50 border-2 border-blue-200 rounded-xl">
+                    <h4 class="text-lg font-bold text-slate-800 mb-3">💡 เคล็ดลับในการใช้ 5 Whys</h4>
+                    <ul class="text-sm text-slate-600 space-y-2 list-disc list-inside">
+                        <li>ไม่จำเป็นต้องถามพอดี 5 ครั้ง อาจน้อยกว่าหรือมากกว่าก็ได้</li>
+                        <li>ถามจนกระทั่งพบสาเหตุที่สามารถควบคุมและแก้ไขได้</li>
+                        <li>หลีกเลี่ยงการโทษคน มุ่งเน้นที่ระบบและกระบวนการ</li>
+                        <li>ใช้ข้อมูลและหลักฐานประกอบการวิเคราะห์</li>
+                        <li>ทำร่วมกับทีมเพื่อมุมมองที่หลากหลาย</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- First Principles Section -->
+        <div id="section-principles" class="framework-section">
+            <div class="bg-white border border-slate-200 rounded-2xl p-8 shadow-sm">
+                <div class="flex items-start justify-between mb-6">
+                    <div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-2">First Principles Thinking</h3>
+                        <p class="text-slate-600">คิดจากหลักการพื้นฐานที่สุด โดยทำลายสมมติฐานและสร้างคำตอบใหม่จากความจริงพื้นฐาน</p>
+                    </div>
+                    <span class="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-semibold text-sm">Advanced</span>
+                </div>
+
+                <!-- Problem/Goal Statement -->
+                <div class="mb-8 p-6 bg-gradient-to-br from-violet-50 to-purple-50 border-2 border-violet-200 rounded-xl">
+                    <label class="block text-lg font-bold text-violet-800 mb-3">🎯 ปัญหาหรือเป้าหมาย (Problem or Goal)</label>
+                    <input type="text" id="principles-goal" class="w-full px-4 py-3 border border-violet-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-400 focus:border-transparent text-lg font-semibold" placeholder="ตัวอย่าง: ต้องการลดต้นทุนการผลิตรถยนต์ไฟฟ้า">
+                    <p class="mt-2 text-sm text-violet-600">💡 ระบุสิ่งที่ต้องการบรรลุหรือปัญหาที่ต้องแก้ไข</p>
+                </div>
+
+                <!-- Step 1: Identify Assumptions -->
+                <div class="mb-8 border-2 border-blue-200 rounded-xl p-6 bg-gradient-to-br from-blue-50 to-cyan-50">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
+                            <span class="text-white font-bold text-xl">1</span>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-bold text-blue-800">ระบุสมมติฐาน (Identify Assumptions)</h4>
+                            <p class="text-sm text-blue-600">สิ่งที่เราเชื่อว่าเป็นจริงแต่อาจไม่ใช่</p>
+                        </div>
+                    </div>
+                    <textarea id="principles-assumptions" class="w-full px-4 py-3 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent" placeholder="ตัวอย่าง:&#10;- แบตเตอรี่ต้องซื้อสำเร็จรูป&#10;- แบตเตอรี่มีราคาแพงมาก&#10;- การผลิตต้องใช้โรงงานขนาดใหญ่&#10;- ต้องมีตัวแทนจำหน่ายจำนวนมาก"></textarea>
+                    <p class="mt-2 text-xs text-blue-600">💡 เขียนทุกสิ่งที่เราถือว่าเป็นความจริง</p>
+                </div>
+
+                <!-- Step 2: Break Down to Fundamentals -->
+                <div class="mb-8 border-2 border-green-200 rounded-xl p-6 bg-gradient-to-br from-green-50 to-emerald-50">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
+                            <span class="text-white font-bold text-xl">2</span>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-bold text-green-800">แยกเป็นความจริงพื้นฐาน (Break to Fundamentals)</h4>
+                            <p class="text-sm text-green-600">อะไรคือความจริงที่พิสูจน์ได้</p>
+                        </div>
+                    </div>
+                    <textarea id="principles-fundamentals" class="w-full px-4 py-3 border border-green-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent" placeholder="ตัวอย่าง:&#10;- แบตเตอรี่ประกอบด้วย: แคโทด, แอโนด, อิเล็กโทรไลต์&#10;- ต้นทุนวัตถุดิบต่อ kWh ประมาณ X บาท&#10;- ราคาตลาดปัจจุบันต่อ kWh ประมาณ Y บาท&#10;- ส่วนต่างมาจากค่าแรงและกระบวนการผลิต"></textarea>
+                    <p class="mt-2 text-xs text-green-600">💡 ใช้ข้อมูล ตัวเลข และหลักฐานทางวิทยาศาสตร์</p>
+                </div>
+
+                <!-- Step 3: Challenge Assumptions -->
+                <div class="mb-8 border-2 border-amber-200 rounded-xl p-6 bg-gradient-to-br from-amber-50 to-yellow-50">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 bg-amber-500 rounded-lg flex items-center justify-center">
+                            <span class="text-white font-bold text-xl">3</span>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-bold text-amber-800">ท้าทายสมมติฐาน (Challenge Assumptions)</h4>
+                            <p class="text-sm text-amber-600">สมมติฐานไหนที่เราสามารถทำลายได้</p>
+                        </div>
+                    </div>
+                    <textarea id="principles-challenge" class="w-full px-4 py-3 border border-amber-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent" placeholder="ตัวอย่าง:&#10;- เราผลิตแบตเตอรี่เองได้ไหม?&#10;- จำเป็นต้องผ่านตัวกลางหรือไม่?&#10;- สามารถใช้วัสดุอื่นที่ถูกกว่าได้ไหม?&#10;- มีวิธีผลิตที่ประหยัดกว่าหรือไม่?"></textarea>
+                    <p class="mt-2 text-xs text-amber-600">💡 ถามว่า "จำเป็นจริงหรือ?" และ "มีทางเลือกอื่นหรือไม่?"</p>
+                </div>
+
+                <!-- Step 4: Rebuild Solutions -->
+                <div class="mb-8 border-2 border-purple-200 rounded-xl p-6 bg-gradient-to-br from-purple-50 to-pink-50">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center">
+                            <span class="text-white font-bold text-xl">4</span>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-bold text-purple-800">สร้างทางออกใหม่ (Rebuild Solutions)</h4>
+                            <p class="text-sm text-purple-600">สร้างแนวทางใหม่จากความจริงพื้นฐาน</p>
+                        </div>
+                    </div>
+                    <textarea id="principles-solutions" class="w-full px-4 py-3 border border-purple-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent" placeholder="ตัวอย่าง:&#10;- สร้าง Gigafactory เพื่อผลิตเซลล์แบตเตอรี่เอง&#10;- ซื้อวัตถุดิบโดยตรงจากเหมือง&#10;- ขายตรงผ่านออนไลน์ ไม่ผ่านตัวแทน&#10;- ใช้เทคโนโลยีใหม่ลดขั้นตอนการผลิต"></textarea>
+                    <p class="mt-2 text-xs text-purple-600">💡 คิดนอกกรอบและไม่จำกัดตัวเองด้วยวิธีการเดิม</p>
+                </div>
+
+                <!-- Innovation Summary -->
+                <div class="p-6 bg-gradient-to-br from-violet-50 to-indigo-50 border-2 border-violet-200 rounded-xl">
+                    <label class="block text-lg font-bold text-violet-800 mb-3">💡 นวัตกรรมใหม่ (Innovation)</label>
+                    <textarea id="principles-innovation" class="w-full px-4 py-3 border border-violet-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-400 focus:border-transparent" placeholder="สรุปแนวทางหรือนวัตกรรมใหม่ที่คิดได้จากการใช้ First Principles"></textarea>
+                </div>
+
+                <div class="mt-8 flex gap-4">
+                    <button onclick="clearPrinciples()" class="flex-1 px-6 py-3 border-2 border-slate-300 text-slate-700 rounded-xl font-semibold hover:bg-slate-50 transition-all duration-300">
+                        Clear All
+                    </button>
+                    <button onclick="savePrinciples()" class="flex-1 px-6 py-3 bg-gradient-to-r from-violet-500 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-violet-500/30 transition-all duration-300">
+                        Save Analysis
+                    </button>
+                </div>
+
+                <!-- Famous Examples -->
+                <div class="mt-6 p-6 bg-gradient-to-br from-slate-50 to-blue-50 border-2 border-blue-200 rounded-xl">
+                    <h4 class="text-lg font-bold text-slate-800 mb-3">🌟 ตัวอย่างที่มีชื่อเสียง</h4>
+                    <div class="space-y-3 text-sm text-slate-600">
+                        <div class="p-3 bg-white rounded-lg border border-blue-100">
+                            <p class="font-semibold text-blue-800 mb-1">Elon Musk & SpaceX</p>
+                            <p>แทนที่จะซื้อจรวดราคา $65M ไปวิเคราะห์ต้นทุนวัตถุดิบพบว่าคิดเป็นเพียง 2% ของราคา จึงตัดสินใจผลิตจรวดเอง</p>
+                        </div>
+                        <div class="p-3 bg-white rounded-lg border border-blue-100">
+                            <p class="font-semibold text-blue-800 mb-1">Henry Ford & Assembly Line</p>
+                            <p>แทนที่จะทำรถที่จุดเดียว ใช้หลักการแยกงานเป็นขั้นตอนเล็กๆ ทำให้ผลิตได้เร็วและถูกกว่าเดิมมาก</p>
+                        </div>
+                        <div class="p-3 bg-white rounded-lg border border-blue-100">
+                            <p class="font-semibold text-blue-800 mb-1">Airbnb</p>
+                            <p>แทนที่จะสร้างโรงแรม กลับมามองว่าผู้คนต้องการแค่ "ที่พัก" จึงใช้บ้านของคนอื่นที่ว่างอยู่</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Framework Switching
+        function switchFramework(framework) {
+            // Hide all sections
+            document.querySelectorAll('.framework-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.framework-tab').forEach(tab => {
+                tab.classList.remove('active');
+                tab.classList.add('bg-slate-100', 'text-slate-700', 'hover:bg-slate-200');
+            });
+            
+            // Show selected section
+            document.getElementById(`section-${framework}`).classList.add('active');
+            
+            // Activate selected tab
+            const activeTab = document.getElementById(`tab-${framework}`);
+            activeTab.classList.add('active');
+            activeTab.classList.remove('bg-slate-100', 'text-slate-700', 'hover:bg-slate-200');
+        }
+
+        // Fishbone Functions
+        function clearFishbone() {
+            if (confirm('คุณต้องการล้างข้อมูล Fishbone Diagram ทั้งหมดหรือไม่?')) {
+                document.getElementById('fishbone-problem').value = '';
+                document.getElementById('fishbone-man').value = '';
+                document.getElementById('fishbone-machine').value = '';
+                document.getElementById('fishbone-material').value = '';
+                document.getElementById('fishbone-method').value = '';
+                document.getElementById('fishbone-measurement').value = '';
+                document.getElementById('fishbone-environment').value = '';
+            }
+        }
+
+        function saveFishbone() {
+            const data = {
+                problem: document.getElementById('fishbone-problem').value,
+                man: document.getElementById('fishbone-man').value,
+                machine: document.getElementById('fishbone-machine').value,
+                material: document.getElementById('fishbone-material').value,
+                method: document.getElementById('fishbone-method').value,
+                measurement: document.getElementById('fishbone-measurement').value,
+                environment: document.getElementById('fishbone-environment').value,
+                timestamp: new Date().toISOString()
+            };
+            
+            localStorage.setItem('fishbone-analysis', JSON.stringify(data));
+            alert('✅ บันทึก Fishbone Diagram สำเร็จ!');
+        }
+
+        // 5 Whys Functions
+        function clearWhys() {
+            if (confirm('คุณต้องการล้างข้อมูล 5 Whys ทั้งหมดหรือไม่?')) {
+                document.getElementById('whys-problem').value = '';
+                document.getElementById('why-1').value = '';
+                document.getElementById('why-2').value = '';
+                document.getElementById('why-3').value = '';
+                document.getElementById('why-4').value = '';
+                document.getElementById('why-5').value = '';
+                document.getElementById('whys-root-cause').value = '';
+                document.getElementById('whys-action').value = '';
+            }
+        }
+
+        function saveWhys() {
+            const data = {
+                problem: document.getElementById('whys-problem').value,
+                why1: document.getElementById('why-1').value,
+                why2: document.getElementById('why-2').value,
+                why3: document.getElementById('why-3').value,
+                why4: document.getElementById('why-4').value,
+                why5: document.getElementById('why-5').value,
+                rootCause: document.getElementById('whys-root-cause').value,
+                action: document.getElementById('whys-action').value,
+                timestamp: new Date().toISOString()
+            };
+            
+            localStorage.setItem('whys-analysis', JSON.stringify(data));
+            alert('✅ บันทึก 5 Whys Analysis สำเร็จ!');
+        }
+
+        // First Principles Functions
+        function clearPrinciples() {
+            if (confirm('คุณต้องการล้างข้อมูล First Principles ทั้งหมดหรือไม่?')) {
+                document.getElementById('principles-goal').value = '';
+                document.getElementById('principles-assumptions').value = '';
+                document.getElementById('principles-fundamentals').value = '';
+                document.getElementById('principles-challenge').value = '';
+                document.getElementById('principles-solutions').value = '';
+                document.getElementById('principles-innovation').value = '';
+            }
+        }
+
+        function savePrinciples() {
+            const data = {
+                goal: document.getElementById('principles-goal').value,
+                assumptions: document.getElementById('principles-assumptions').value,
+                fundamentals: document.getElementById('principles-fundamentals').value,
+                challenge: document.getElementById('principles-challenge').value,
+                solutions: document.getElementById('principles-solutions').value,
+                innovation: document.getElementById('principles-innovation').value,
+                timestamp: new Date().toISOString()
+            };
+            
+            localStorage.setItem('principles-analysis', JSON.stringify(data));
+            alert('✅ บันทึก First Principles Thinking สำเร็จ!');
+        }
+
+        // Export All Analysis
+        function exportAnalysis() {
+            const allData = {
+                fishbone: JSON.parse(localStorage.getItem('fishbone-analysis') || '{}'),
+                whys: JSON.parse(localStorage.getItem('whys-analysis') || '{}'),
+                principles: JSON.parse(localStorage.getItem('principles-analysis') || '{}'),
+                exportDate: new Date().toISOString()
+            };
+
+            const dataStr = JSON.stringify(allData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `problem-solving-analysis-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Load saved data on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            // Load Fishbone data
+            const fishboneData = JSON.parse(localStorage.getItem('fishbone-analysis') || '{}');
+            if (fishboneData.problem) document.getElementById('fishbone-problem').value = fishboneData.problem;
+            if (fishboneData.man) document.getElementById('fishbone-man').value = fishboneData.man;
+            if (fishboneData.machine) document.getElementById('fishbone-machine').value = fishboneData.machine;
+            if (fishboneData.material) document.getElementById('fishbone-material').value = fishboneData.material;
+            if (fishboneData.method) document.getElementById('fishbone-method').value = fishboneData.method;
+            if (fishboneData.measurement) document.getElementById('fishbone-measurement').value = fishboneData.measurement;
+            if (fishboneData.environment) document.getElementById('fishbone-environment').value = fishboneData.environment;
+
+            // Load 5 Whys data
+            const whysData = JSON.parse(localStorage.getItem('whys-analysis') || '{}');
+            if (whysData.problem) document.getElementById('whys-problem').value = whysData.problem;
+            if (whysData.why1) document.getElementById('why-1').value = whysData.why1;
+            if (whysData.why2) document.getElementById('why-2').value = whysData.why2;
+            if (whysData.why3) document.getElementById('why-3').value = whysData.why3;
+            if (whysData.why4) document.getElementById('why-4').value = whysData.why4;
+            if (whysData.why5) document.getElementById('why-5').value = whysData.why5;
+            if (whysData.rootCause) document.getElementById('whys-root-cause').value = whysData.rootCause;
+            if (whysData.action) document.getElementById('whys-action').value = whysData.action;
+
+            // Load First Principles data
+            const principlesData = JSON.parse(localStorage.getItem('principles-analysis') || '{}');
+            if (principlesData.goal) document.getElementById('principles-goal').value = principlesData.goal;
+            if (principlesData.assumptions) document.getElementById('principles-assumptions').value = principlesData.assumptions;
+            if (principlesData.fundamentals) document.getElementById('principles-fundamentals').value = principlesData.fundamentals;
+            if (principlesData.challenge) document.getElementById('principles-challenge').value = principlesData.challenge;
+            if (principlesData.solutions) document.getElementById('principles-solutions').value = principlesData.solutions;
+            if (principlesData.innovation) document.getElementById('principles-innovation').value = principlesData.innovation;
+        });
+    </script>
+</body>
+</html>
